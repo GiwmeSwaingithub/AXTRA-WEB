@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXTRA DOWNLOADER - Simple Media Downloader</title>
     <style>
+        /* All your existing CSS remains the same */
         :root {
             --primary-color: #4a6cf7;
             --secondary-color: #6b8aff;
@@ -573,7 +574,9 @@
                     <!-- Media items will be added by JavaScript -->
                 </div>
                 <button class="toggle-json" id="toggleJson">
-                    <!-- CC<span>Show JSON Response</span>-->
+                                        <!--                     <span>Show JSON Response</span>
+Media items will be added by JavaScript -->
+
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -593,16 +596,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Platform data
-            const platforms = [
+           const platforms = [
              { id: 'tiktok', name: 'TikTok', color: '#000000', icon: 'T', domains: ['tiktok.com'] },
-                { id: 'twitter', name: 'Twitter (X)', color: '#000000', icon: 'X', domains: ['twitter.com', 'x.com'] },
                 { id: 'youtube', name: 'YouTube', color: '#ff0000', icon: 'Y', domains: ['youtube.com', 'youtu.be'] },
                 { id: 'meta', name: 'Facebook & Instagram', color: '#1877f2', icon: 'M', domains: ['facebook.com', 'fb.com', 'instagram.com'] },
-                { id: 'threads', name: 'Threads', color: '#000000', icon: 'T', domains: ['threads.net'] },
+                { id: 'snapchat', name: 'Snapchat', color: '#fffc00', icon: 'S', domains: ['snapchat.com'] },
                 { id: 'linkedin', name: 'LinkedIn', color: '#0a66c2', icon: 'L', domains: ['linkedin.com'] },
                 { id: 'pinterest', name: 'Pinterest', color: '#e60023', icon: 'P', domains: ['pinterest.com'] },
                 { id: 'reddit', name: 'Reddit', color: '#ff4500', icon: 'R', domains: ['reddit.com'] },
-                { id: 'snapchat', name: 'Snapchat', color: '#fffc00', icon: 'S', domains: ['snapchat.com'] },
                 { id: 'soundcloud', name: 'SoundCloud', color: '#ff3300', icon: 'S', domains: ['soundcloud.com'] },
                 { id: 'spotify', name: 'Spotify', color: '#1db954', icon: 'S', domains: ['spotify.com'] },
                 { id: 'bluesky', name: 'Bluesky', color: '#1185fe', icon: 'B', domains: ['bsky.app', 'blueskyweb.xyz'] },
@@ -611,8 +612,11 @@
                 { id: 'capcut', name: 'CapCut', color: '#00c2ff', icon: 'C', domains: ['capcut.com'] },
                 { id: 'dailymotion', name: 'Dailymotion', color: '#0066dc', icon: 'D', domains: ['dailymotion.com'] },
                 { id: 'douyin', name: 'Douyin', color: '#000000', icon: 'D', domains: ['douyin.com'] },
-            
+                { id: 'twitter', name: 'Twitter (X)', color: '#000000', icon: 'X', domains: ['twitter.com', 'x.com'] },
+                { id: 'threads', name: 'Threads', color: '#000000', icon: 'T', domains: ['threads.net'] },
+
             ];
+
 
             const dropdownBtn = document.getElementById('dropdownBtn');
             const dropdownContent = document.getElementById('dropdownContent');
@@ -666,7 +670,7 @@
             // Download button click handler
             downloadBtn.addEventListener('click', fetchMedia);
 
-            /* Toggle JSON viewer
+          /*  // Toggle JSON viewer
             toggleJson.addEventListener('click', () => {
                 jsonViewer.classList.toggle('active');
                 toggleJson.querySelector('span').textContent = 
@@ -677,7 +681,6 @@
                 arrow.style.transform = jsonViewer.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0)';
             });
 */
-
             // Handle Enter key in URL input
             mediaUrlInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -772,8 +775,12 @@
             function displayResults(data) {
                 mediaResults.innerHTML = '';
                 
+                // Handle LinkedIn response format
+                if (selectedPlatform === 'linkedin' && data && data.success && data.data && Array.isArray(data.data.videos)) {
+                    displayLinkedInResults(data.data);
+                }
                 // Handle Facebook response format
-                if (selectedPlatform === 'meta' && data && data.success && data.data && Array.isArray(data.data.data)) {
+                else if (selectedPlatform === 'meta' && data && data.success && data.data && Array.isArray(data.data.data)) {
                     const url = mediaUrlInput.value.toLowerCase();
                     if (url.includes('facebook.com') || url.includes('fb.com')) {
                         displayFacebookResults(data.data);
@@ -818,6 +825,82 @@
                 
                 // Show results section
                 resultsSection.classList.add('active');
+            }
+
+            // Display LinkedIn results
+            function displayLinkedInResults(data) {
+                // Add developer credit if available
+                if (data.developer) {
+                    const creditElement = document.createElement('div');
+                    creditElement.className = 'video-title';
+                    creditElement.style.background = '#e8f4fd';
+                    creditElement.innerHTML = `<p style="font-size: 0.8rem; color: #666;">API by AXTRA</p>`;
+                    mediaResults.appendChild(creditElement);
+                }
+
+                // Handle videos array
+                if (data.videos && data.videos.length > 0) {
+                    data.videos.forEach((videoUrl, index) => {
+                        const mediaItem = document.createElement('div');
+                        mediaItem.className = 'media-item';
+                        
+                        let previewContent = '';
+                        if (videoUrl) {
+                            previewContent = `
+                                <div style="position: relative; width: 100%; height: 100%;">
+                                    <video controls style="width: 100%; height: 100%; object-fit: contain;">
+                                        <source src="${videoUrl}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div style="position: absolute; top: 10px; right: 10px; background: rgba(0, 102, 194, 0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">LinkedIn</div>
+                                </div>
+                            `;
+                        } else {
+                            previewContent = `<div class="video-placeholder">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <p>Preview not available</p>
+                            </div>`;
+                        }
+                        
+                        // Extract quality from URL if possible
+                        let quality = 'HD';
+                        if (videoUrl.includes('mp4-720p')) {
+                            quality = '720p';
+                        } else if (videoUrl.includes('mp4-1080p')) {
+                            quality = '1080p';
+                        } else if (videoUrl.includes('mp4-480p')) {
+                            quality = '480p';
+                        }
+                        
+                        const filename = `linkedin_video_${quality}_${index + 1}.mp4`;
+                        
+                        mediaItem.innerHTML = `
+                            <div class="media-preview">
+                                ${previewContent}
+                            </div>
+                            <div class="media-info">
+                                <h3>LinkedIn Video <span class="quality-badge">${quality}</span></h3>
+                                <p>Type: Video</p>
+                                <p>Format: MP4</p>
+                                <p>Platform: LinkedIn</p>
+                                <button class="download-btn" data-url="${videoUrl}" data-filename="${filename}">Download Video</button>
+                            </div>
+                        `;
+                        
+                        mediaResults.appendChild(mediaItem);
+                    });
+                }
+                
+                // Add download event listeners
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    if (btn.dataset.url) {
+                        btn.addEventListener('click', function() {
+                            downloadFile(this.dataset.url, this.dataset.filename);
+                        });
+                    }
+                });
             }
 
             // Display Facebook results
@@ -914,8 +997,8 @@
                         
                         // Determine if it's video or image based on URL
                         const isVideo = item.url && (item.url.includes('.mp4') || item.url.includes('video'));
-                        const fileExt = isVideo ? 'mp4' : 'jpg';
-                        const mediaType = isVideo ? 'Video' : 'Image';
+                        const fileExt = isVideo ?  'jpg' : 'mp4';
+                        const mediaType = isVideo ?  'Image': 'Video';
                         
                         const filename = `instagram_${mediaType.toLowerCase()}_${index + 1}.${fileExt}`;
                         
@@ -924,10 +1007,8 @@
                                 ${previewContent}
                             </div>
                             <div class="media-info">
-                                <h3>Instagram ${mediaType}</h3>
-                                <p>Type: ${mediaType}</p>
-                                <p>Format: ${fileExt.toUpperCase()}</p>
-                                <button class="download-btn" data-url="${item.url}" data-filename="${filename}">Download ${mediaType}</button>
+                                <h3>Instagram  ITEM </h3>
+                                <button class="download-btn" data-url="${item.url}" data-filename="${filename}">Download Item</button>
                             </div>
                         `;
                         
