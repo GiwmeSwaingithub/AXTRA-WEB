@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXTRA DOWNLOADER - Simple Media Downloader</title>
+    <style>
+        :root {
+            --primary-color: #4a6cf7;
+            --secondary-color: #6b8aff;
+            --dark-color: #1d2144;
+            --light-color: #f5f8ff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --border-radius: 8px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --font-size-large: 1.1rem;
+            --font-size-medium: 1rem;
+            --font-size-small: 0.9rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f4ff;
+            color: var(--dark-color);
+            line-height: 1.6;
+            font-size: var(--font-size-medium);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: var(--font-size-medium);
+            opacity: 0.9;
+        }
+
+        main {
+            padding: 2rem 0;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            color: var(--dark-color);
+        }
+
+        .platform-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-btn {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-medium);
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.3s;
+        }
+
+        .dropdown-btn:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .dropdown-btn:hover {
+            border-color: #aaa;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .dropdown-content.active {
+            display: block;
+        }
+
+        .platform-option {
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .platform-option:hover {
+            background-color: #f5f8ff;
+        }
+
+        .platform-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 0.8rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .platform-name {
+            font-size: var(--font-size-medium);
+        }
+
+        .input-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            font-size: var(--font-size-medium);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .input-group button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            font-size: var(--font-size-medium);
+        }
+
+        .input-group button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .input-group button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .detected-platform {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #e8f4fd;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            display: none;
+            font-size: var(--font-size-small);
+        }
+
+        .detected-platform.active {
+            display: block;
+        }
+
+        .detected-platform span {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .results-section {
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-message {
+            background-color: #ffeaea;
+            color: var(--danger-color);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .media-results {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .media-item {
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .media-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .media-preview {
+            height: 200px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .media-preview img,
+        .media-preview video,
+        .media-preview audio {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .audio-preview {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ff3300, #ff6633);
+        }
+
+        .audio-preview audio {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .video-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .video-placeholder svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        .media-info {
+            padding: 15px;
+        }
+
+        .media-info h3 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .media-info p {
+            color: #666;
+            font-size: var(--font-size-small);
+            margin-bottom: 15px;
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--success-color);
+            color: white;
+            text-align: center;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: var(--font-size-medium);
+        }
+
+        .download-btn:hover {
+            background-color: #218838;
+        }
+
+        .json-viewer {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        .json-viewer.active {
+            display: block;
+        }
+
+        .toggle-json {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: var(--font-size-small);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .video-title {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--light-color);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .video-title h3 {
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .video-title p {
+            color: #666;
+            font-size: var(--font-size-small);
+        }
+
+        .timestamp {
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .preview-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #856404;
+        }
+
+        .size-info {
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .audio-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .audio-icon svg {
+            width: 32px;
+            height: 32px;
+            color: #ff3300;
+        }
+
+        .quality-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+            font-size: var(--font-size-small);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                padding: 0 15px;
+            }
+            
+            .card {
+                padding: 1rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-group input {
+                border-radius: var(--border-radius);
+                margin-bottom: 10px;
+            }
+            
+            .input-group button {
+                border-radius: var(--border-radius);
+                padding: 12px;
+            }
+            
+            .dropdown-btn, .platform-option {
+                padding: 14px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.7rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .dropdown-btn, .platform-option {
+                padding: 16px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>AXTRA DOWNLOADER</h1>
+            <p>Simple media downloader for everyone</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="card">
+            <h2 class="section-title">Download Media</h2>
+            
+            <div class="platform-selector">
+                <h3 class="section-title">Select Platform</h3>
+                <div class="dropdown">
+                    <button class="dropdown-btn" id="dropdownBtn">
+                        <span id="selectedPlatform">Facebook & Instagram</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="dropdown-content" id="dropdownContent">
+                        <!-- Platforms will be added by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <h3 class="section-title">Enter Media URL</h3>
+                <div class="input-group">
+                    <input type="text" id="mediaUrl" placeholder="Paste your media URL here...">
+                    <button id="downloadBtn">Download</button>
+                </div>
+                <div class="detected-platform" id="detectedPlatform">
+                    Detected platform: <span id="platformName"></span>
+                </div>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Fetching media information...</p>
+            </div>
+
+            <div class="results-section" id="resultsSection">
+                <h3 class="section-title">Download Options</h3>
+                <div class="media-results" id="mediaResults">
+                    <!-- Media items will be added by JavaScript -->
+                </div>
+                <button class="toggle-json" id="toggleJson">
+                    <!-- CC<span>Show JSON Response</span>-->
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="json-viewer" id="jsonViewer"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 AXTRA DOWNLOADER. All rights reserved.</p>
+            <p>This tool is for educational purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Platform data
+            const platforms = [
+             { id: 'tiktok', name: 'TikTok', color: '#000000', icon: 'T', domains: ['tiktok.com'] },
+                { id: 'twitter', name: 'Twitter (X)', color: '#000000', icon: 'X', domains: ['twitter.com', 'x.com'] },
+                { id: 'youtube', name: 'YouTube', color: '#ff0000', icon: 'Y', domains: ['youtube.com', 'youtu.be'] },
+                { id: 'meta', name: 'Facebook & Instagram', color: '#1877f2', icon: 'M', domains: ['facebook.com', 'fb.com', 'instagram.com'] },
+                { id: 'threads', name: 'Threads', color: '#000000', icon: 'T', domains: ['threads.net'] },
+                { id: 'linkedin', name: 'LinkedIn', color: '#0a66c2', icon: 'L', domains: ['linkedin.com'] },
+                { id: 'pinterest', name: 'Pinterest', color: '#e60023', icon: 'P', domains: ['pinterest.com'] },
+                { id: 'reddit', name: 'Reddit', color: '#ff4500', icon: 'R', domains: ['reddit.com'] },
+                { id: 'snapchat', name: 'Snapchat', color: '#fffc00', icon: 'S', domains: ['snapchat.com'] },
+                { id: 'soundcloud', name: 'SoundCloud', color: '#ff3300', icon: 'S', domains: ['soundcloud.com'] },
+                { id: 'spotify', name: 'Spotify', color: '#1db954', icon: 'S', domains: ['spotify.com'] },
+                { id: 'bluesky', name: 'Bluesky', color: '#1185fe', icon: 'B', domains: ['bsky.app', 'blueskyweb.xyz'] },
+                { id: 'tumblr', name: 'Tumblr', color: '#001935', icon: 'T', domains: ['tumblr.com'] },
+                { id: 'kuaishou', name: 'Kuaishou', color: '#ff5000', icon: 'K', domains: ['kuaishou.com'] },
+                { id: 'capcut', name: 'CapCut', color: '#00c2ff', icon: 'C', domains: ['capcut.com'] },
+                { id: 'dailymotion', name: 'Dailymotion', color: '#0066dc', icon: 'D', domains: ['dailymotion.com'] },
+                { id: 'douyin', name: 'Douyin', color: '#000000', icon: 'D', domains: ['douyin.com'] },
+            
+            ];
+
+            const dropdownBtn = document.getElementById('dropdownBtn');
+            const dropdownContent = document.getElementById('dropdownContent');
+            const selectedPlatformElement = document.getElementById('selectedPlatform');
+            const mediaUrlInput = document.getElementById('mediaUrl');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const loading = document.getElementById('loading');
+            const resultsSection = document.getElementById('resultsSection');
+            const mediaResults = document.getElementById('mediaResults');
+            const toggleJson = document.getElementById('toggleJson');
+            const jsonViewer = document.getElementById('jsonViewer');
+            const detectedPlatform = document.getElementById('detectedPlatform');
+            const platformName = document.getElementById('platformName');
+
+            let selectedPlatform = 'meta';
+            let apiResponse = null;
+
+            // Create platform dropdown options
+            platforms.forEach(platform => {
+                const platformOption = document.createElement('div');
+                platformOption.className = 'platform-option';
+                platformOption.dataset.platform = platform.id;
+                
+                platformOption.innerHTML = `
+                    <div class="platform-icon" style="background-color: ${platform.color}">${platform.icon}</div>
+                    <div class="platform-name">${platform.name}</div>
+                `;
+                
+                platformOption.addEventListener('click', () => {
+                    selectedPlatform = platform.id;
+                    selectedPlatformElement.textContent = platform.name;
+                    dropdownContent.classList.remove('active');
+                });
+                
+                dropdownContent.appendChild(platformOption);
+            });
+
+            // Toggle dropdown
+            dropdownBtn.addEventListener('click', () => {
+                dropdownContent.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!dropdownBtn.contains(e.target) && !dropdownContent.contains(e.target)) {
+                    dropdownContent.classList.remove('active');
+                }
+            });
+
+            // Download button click handler
+            downloadBtn.addEventListener('click', fetchMedia);
+
+            /* Toggle JSON viewer
+            toggleJson.addEventListener('click', () => {
+                jsonViewer.classList.toggle('active');
+                toggleJson.querySelector('span').textContent = 
+                    jsonViewer.classList.contains('active') ? 'Hide JSON Response' : 'Show JSON Response';
+                
+                // Rotate arrow
+                const arrow = toggleJson.querySelector('svg');
+                arrow.style.transform = jsonViewer.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0)';
+            });
+*/
+
+            // Handle Enter key in URL input
+            mediaUrlInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    fetchMedia();
+                }
+            });
+
+            // Auto-detect platform when URL changes
+            mediaUrlInput.addEventListener('input', detectPlatform);
+
+            // Detect platform from URL
+            function detectPlatform() {
+                const url = mediaUrlInput.value.trim();
+                
+                if (!url) {
+                    detectedPlatform.classList.remove('active');
+                    return;
+                }
+
+                try {
+                    const urlObj = new URL(url);
+                    const hostname = urlObj.hostname.toLowerCase();
+                    
+                    // Find matching platform
+                    const matchedPlatform = platforms.find(platform => 
+                        platform.domains.some(domain => hostname.includes(domain))
+                    );
+                    
+                    if (matchedPlatform) {
+                        // Update selected platform and UI
+                        selectedPlatform = matchedPlatform.id;
+                        platformName.textContent = matchedPlatform.name;
+                        detectedPlatform.classList.add('active');
+                        
+                        // Update selected platform in dropdown
+                        selectedPlatformElement.textContent = matchedPlatform.name;
+                    } else {
+                        detectedPlatform.classList.remove('active');
+                    }
+                } catch (e) {
+                    // Invalid URL, hide platform detection
+                    detectedPlatform.classList.remove('active');
+                }
+            }
+
+            // Fetch media function
+            async function fetchMedia() {
+                const url = mediaUrlInput.value.trim();
+                
+                if (!url) {
+                    showError('Please enter a valid URL');
+                    return;
+                }
+
+                // Validate URL format
+                try {
+                    new URL(url);
+                } catch (e) {
+                    showError('Please enter a valid URL');
+                    return;
+                }
+
+                // Show loading, hide error and results
+                loading.classList.add('active');
+                errorMessage.classList.remove('active');
+                resultsSection.classList.remove('active');
+                downloadBtn.disabled = true;
+
+                try {
+                    const apiUrl = `https://api.axtra.eduniapps.com/api/${selectedPlatform}/download?url=${encodeURIComponent(url)}`;
+                    const response = await fetch(apiUrl);
+                    
+                    if (!response.ok) {
+                        throw new Error(`API request failed with status ${response.status}`);
+                    }
+                    
+                    apiResponse = await response.json();
+                    
+                    // Display results
+                    displayResults(apiResponse);
+                    
+                } catch (error) {
+                    console.error('Error fetching media:', error);
+                    showError('Failed to fetch media. Please check the URL and try again.');
+                } finally {
+                    loading.classList.remove('active');
+                    downloadBtn.disabled = false;
+                }
+            }
+
+            // Display results function
+            function displayResults(data) {
+                mediaResults.innerHTML = '';
+                
+                // Handle Facebook response format
+                if (selectedPlatform === 'meta' && data && data.success && data.data && Array.isArray(data.data.data)) {
+                    const url = mediaUrlInput.value.toLowerCase();
+                    if (url.includes('facebook.com') || url.includes('fb.com')) {
+                        displayFacebookResults(data.data);
+                    } else if (url.includes('instagram.com')) {
+                        displayInstagramResults(data.data);
+                    } else {
+                        // Default to Instagram format for meta platform
+                        displayInstagramResults(data.data);
+                    }
+                }
+                // Handle SoundCloud response format
+                else if (selectedPlatform === 'soundcloud' && data && data.success && data.data) {
+                    displaySoundCloudResults(data.data);
+                } 
+                // Handle Pinterest response format
+                else if (selectedPlatform === 'pinterest' && data && data.success && data.data) {
+                    displayPinterestResults(data.data);
+                } 
+                // Handle Snapchat response format
+                else if (selectedPlatform === 'snapchat' && data && data.success && data.data) {
+                    displaySnapchatResults(data.data);
+                } 
+                // Handle YouTube response format
+                else if (selectedPlatform === 'youtube' && data && data.success && data.data) {
+                    displayYouTubeResults(data.data);
+                } 
+                // Handle TikTok response format
+                else if (selectedPlatform === 'tiktok' && data && data.success && data.data) {
+                    displayTikTokResults(data.data);
+                }
+                // Handle standard response format
+                else if (data && data.media && data.media.length > 0) {
+                    data.media.forEach((media, index) => {
+                        createMediaItem(media, index);
+                    });
+                } else {
+                    mediaResults.innerHTML = '<p>No media found for this URL.</p>';
+                }
+                
+                // Display JSON response
+                jsonViewer.textContent = JSON.stringify(data, null, 2);
+                
+                // Show results section
+                resultsSection.classList.add('active');
+            }
+
+            // Display Facebook results
+            function displayFacebookResults(data) {
+                // Add developer credit if available
+                if (data.developer) {
+                    const creditElement = document.createElement('div');
+                    creditElement.className = 'video-title';
+                    creditElement.style.background = '#e8f4fd';
+                    creditElement.innerHTML = `<p style="font-size: 0.8rem; color: #666;">API by AXTRA</p>`;
+                    mediaResults.appendChild(creditElement);
+                }
+
+                // Handle data array with multiple quality options
+                if (data.data && data.data.length > 0) {
+                    data.data.forEach((item, index) => {
+                        const mediaItem = document.createElement('div');
+                        mediaItem.className = 'media-item';
+                        
+                        let previewContent = '';
+                        if (item.thumbnail) {
+                            previewContent = `
+                                <div style="position: relative; width: 100%; height: 100%;">
+                                    <img src="${item.thumbnail}" alt="Video thumbnail" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M8 5v14l11-7z\\'/></svg><p>Preview not available</p></div>'">
+                                    ${item.shouldRender ? '<div style="position: absolute; top: 10px; right: 10px; background: rgba(255,0,0,0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">Requires Processing</div>' : ''}
+                                </div>
+                            `;
+                        } else {
+                            previewContent = `<div class="video-placeholder">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <p>Preview not available</p>
+                            </div>`;
+                        }
+                        
+                        const filename = `facebook_${item.resolution.replace(/[^a-zA-Z0-9]/g, '_')}_${index + 1}.mp4`;
+                        
+                        mediaItem.innerHTML = `
+                            <div class="media-preview">
+                                ${previewContent}
+                            </div>
+                            <div class="media-info">
+                                <h3>Facebook Video <span class="quality-badge">${item.resolution}</span></h3>
+                                <p>Type: Video</p>
+                                <p>Format: MP4</p>
+                                ${item.shouldRender ? '<div class="preview-notice">This video requires server processing. Download may take longer.</div>' : ''}
+                                <button class="download-btn" data-url="${item.url}" data-filename="${filename}">Download Video</button>
+                            </div>
+                        `;
+                        
+                        mediaResults.appendChild(mediaItem);
+                    });
+                }
+                
+                // Add download event listeners
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    if (btn.dataset.url) {
+                        btn.addEventListener('click', function() {
+                            downloadFile(this.dataset.url, this.dataset.filename);
+                        });
+                    }
+                });
+            }
+
+            // Display Instagram results
+            function displayInstagramResults(data) {
+                // Add developer credit if available
+                if (data.developer) {
+                    const creditElement = document.createElement('div');
+                    creditElement.className = 'video-title';
+                    creditElement.style.background = '#e8f4fd';
+                    creditElement.innerHTML = `<p style="font-size: 0.8rem; color: #666;">API by AXTRA</p>`;
+                    mediaResults.appendChild(creditElement);
+                }
+
+                // Handle data array
+                if (data.data && data.data.length > 0) {
+                    data.data.forEach((item, index) => {
+                        const mediaItem = document.createElement('div');
+                        mediaItem.className = 'media-item';
+                        
+                        let previewContent = '';
+                        if (item.thumbnail) {
+                            previewContent = `<img src="${item.thumbnail}" alt="Instagram media preview" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M8 5v14l11-7z\\'/></svg><p>Preview not available</p></div>'">`;
+                        } else {
+                            previewContent = `<div class="video-placeholder">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <p>Preview not available</p>
+                            </div>`;
+                        }
+                        
+                        // Determine if it's video or image based on URL
+                        const isVideo = item.url && (item.url.includes('.mp4') || item.url.includes('video'));
+                        const fileExt = isVideo ? 'mp4' : 'jpg';
+                        const mediaType = isVideo ? 'Video' : 'Image';
+                        
+                        const filename = `instagram_${mediaType.toLowerCase()}_${index + 1}.${fileExt}`;
+                        
+                        mediaItem.innerHTML = `
+                            <div class="media-preview">
+                                ${previewContent}
+                            </div>
+                            <div class="media-info">
+                                <h3>Instagram ${mediaType}</h3>
+                                <p>Type: ${mediaType}</p>
+                                <p>Format: ${fileExt.toUpperCase()}</p>
+                                <button class="download-btn" data-url="${item.url}" data-filename="${filename}">Download ${mediaType}</button>
+                            </div>
+                        `;
+                        
+                        mediaResults.appendChild(mediaItem);
+                    });
+                }
+                
+                // Add download event listeners
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    if (btn.dataset.url) {
+                        btn.addEventListener('click', function() {
+                            downloadFile(this.dataset.url, this.dataset.filename);
+                        });
+                    }
+                });
+            }
+
+            // Display SoundCloud results
+            function displaySoundCloudResults(data) {
+                // Add title and info
+                if (data.title) {
+                    const titleElement = document.createElement('div');
+                    titleElement.className = 'video-title';
+                    
+                    let durationText = '';
+                    if (data.duration) {
+                        durationText = `Duration: ${data.duration}`;
+                    }
+                    
+                    titleElement.innerHTML = `
+                        <h3>${data.title}</h3>
+                        ${durationText ? `<p>${durationText}</p>` : ''}
+                    `;
+                    mediaResults.appendChild(titleElement);
+                }
+                
+                // Add thumbnail preview
+                if (data.thumbnail) {
+                    const thumbnailItem = document.createElement('div');
+                    thumbnailItem.className = 'media-item';
+                    
+                    thumbnailItem.innerHTML = `
+                        <div class="media-preview">
+                            <img src="${data.thumbnail}" alt="Track thumbnail" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z\\'/></svg><p>Thumbnail Preview Not Available</p></div>'">
+                        </div>
+                        <div class="media-info">
+                            <h3>Track Thumbnail</h3>
+                            <p>Type: Image</p>
+                            <button class="download-btn" data-url="${data.thumbnail}" data-filename="soundcloud_thumbnail.jpg">Download Thumbnail</button>
+                        </div>
+                    `;
+                    
+                    mediaResults.appendChild(thumbnailItem);
+                }
+                
+                // Handle audio medias
+                if (data.medias && data.medias.length > 0) {
+                    // Filter only valid audio formats and remove duplicates
+                    const validMedias = data.medias.filter(media => 
+                        media.audioAvailable && 
+                        media.url && 
+                        !media.url.includes('urlmp4.com') && // Remove placeholder URLs
+                        media.extension !== 'ogg' // Prefer MP3 over OGG
+                    );
+                    
+                    // If no valid medias found, show all
+                    const mediasToShow = validMedias.length > 0 ? validMedias : data.medias;
+                    
+                    mediasToShow.forEach((media, index) => {
+                        const mediaItem = document.createElement('div');
+                        mediaItem.className = 'media-item';
+                        
+                        let previewContent = '';
+                        if (media.audioAvailable && media.url) {
+                            previewContent = `
+                                <div class="audio-preview">
+                                    <div class="audio-icon">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                                        </svg>
+                                    </div>
+                                    <audio controls>
+                                        <source src="${media.url}" type="audio/${media.extension}">
+                                        Your browser does not support the audio tag.
+                                    </audio>
+                                </div>
+                            `;
+                        } else {
+                            previewContent = `<div class="video-placeholder">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                                </svg>
+                                <p>Audio preview not available</p>
+                            </div>`;
+                        }
+                        
+                        const filename = `soundcloud_${media.quality}_${index + 1}.${media.extension}`;
+                        
+                        mediaItem.innerHTML = `
+                            <div class="media-preview">
+                                ${previewContent}
+                            </div>
+                            <div class="media-info">
+                                <h3>${media.quality || `Audio ${index + 1}`}</h3>
+                                <p>Type: Audio</p>
+                                <p>Format: ${media.extension.toUpperCase()}</p>
+                                ${media.formattedSize ? `<p class="size-info">Size: ${media.formattedSize}</p>` : ''}
+                                ${media.chunked ? '<div class="preview-notice">This audio file may require special handling for download.</div>' : ''}
+                                <button class="download-btn" data-url="${media.url}" data-filename="${filename}">Download Audio</button>
+                            </div>
+                        `;
+                        
+                        mediaResults.appendChild(mediaItem);
+                    });
+                }
+                
+                // Add download event listeners
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    if (btn.dataset.url) {
+                        btn.addEventListener('click', function() {
+                            downloadFile(this.dataset.url, this.dataset.filename);
+                        });
+                    }
+                });
+            }
+
+            // Display Pinterest results
+            function displayPinterestResults(data) {
+                // Add title
+                if (data.title) {
+                    const titleElement = document.createElement('div');
+                    titleElement.className = 'video-title';
+                    titleElement.innerHTML = `<h3>${data.title}</h3>`;
+                    mediaResults.appendChild(titleElement);
+                }
+
+                // Handle downloads array
+                if (data.downloads && data.downloads.length > 0) {
+                    data.downloads.forEach((download, index) => {
+                        const downloadItem = document.createElement('div');
+                        downloadItem.className = 'media-item';
+                        
+                        // Determine media type based on format
+                        let mediaType = 'image';
+                        let fileExt = 'jpg';
+                        
+                        if (download.format === 'MP4') {
+                            mediaType = 'video';
+                            fileExt = 'mp4';
+                        } else if (download.format === 'JPG' || download.format === 'JPEG') {
+                            mediaType = 'image';
+                            fileExt = 'jpg';
+                        } else if (download.format === 'PNG') {
+                            mediaType = 'image';
+                            fileExt = 'png';
+                        }
+                        
+                        let previewContent = '';
+                        if (mediaType === 'video' && download.url) {
+                            previewContent = `<video controls><source src="${download.url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+                        } else if (mediaType === 'image' && download.url) {
+                            previewContent = `<img src="${download.url}" alt="Pinterest media preview" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z\\'/></svg><p>Image Preview Not Available</p></div>'">`;
+                        } else {
+                            previewContent = `<div class="video-placeholder">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <p>Preview not available</p>
+                            </div>`;
+                        }
+                        
+                        const filename = `pinterest_${mediaType}_${index + 1}.${fileExt}`;
+                        
+                        downloadItem.innerHTML = `
+                            <div class="media-preview">
+                                ${previewContent}
+                            </div>
+                            <div class="media-info">
+                                <h3>${download.quality || `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} ${index + 1}`}</h3>
+                                <p>Type: ${mediaType}</p>
+                                <p>Format: ${download.format}</p>
+                                <button class="download-btn" data-url="${download.url}" data-filename="${filename}">Download ${mediaType === 'video' ? 'Video' : 'Image'}</button>
+                            </div>
+                        `;
+                        
+                        mediaResults.appendChild(downloadItem);
+                    });
+                }
+                
+                // Add download event listeners
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    if (btn.dataset.url) {
+                        btn.addEventListener('click', function() {
+                            downloadFile(this.dataset.url, this.dataset.filename);
+                        });
+                    }
+                });
+            }
+
+            // Display Snapchat results
+            function displaySnapchatResults(data) {
+                // Add title
+                if (data.title) {
+                    const titleElement = document.createElement('div');
+                    titleElement.className = 'video-title';
+                    titleElement.innerHTML = `<h3>${data.title}</h3>`;
+                    mediaResults.appendChild(titleElement);
+                }
+
+                // Handle snapList
+                if (data.data && data.data.snapList && data.data.snapList.length > 0) {
+                    data.data.snapList.forEach((snap, index) => {
+                        const snapItem = document.createElement('div');
+                        snapItem.className = 'media-item';
+                        
+                        // Determine media type
+                        let mediaType = 'image';
+                        let fileExt = 'jpg';
+                        
+                        if (snap.snapMediaType === 1) {
+                            mediaType = 'image';
+                            fileExt = 'jpg';
+                        } else if (snap.snapMediaType === 2) {
+                            mediaType = 'video';
+                            fileExt = 'mp4';
+                        }
+                        
+                        // Use mediaUrl for download and mediaPreviewUrl for preview
+                        const downloadUrl = snap.snapUrls.mediaUrl;
+                        const previewUrl = snap.snapUrls.mediaPreviewUrl ? snap.snapUrls.mediaPreviewUrl.value : snap.snapUrls.mediaUrl;
+                        
+                        let previewContent = '';
+                        if (mediaType === 'video') {
+                            // For Snapchat videos, use a placeholder with download option
+                            previewContent = `
+                                <div class="video-placeholder">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                    <p>Snapchat Video</p>
+                                    <p style="font-size: 0.8rem; margin-top: 5px;">Click download to save the video</p>
+                                </div>
+                            `;
+                        } else {
+                            previewContent = `<img src="${previewUrl}" alt="Snapchat media preview" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z\\'/></svg><p>Image Preview Not Available</p></div>'">`;
+                        }
+                        
+                        // Format timestamp
+                        let timestampText = '';
+                        if (snap.timestampInSec && snap.timestampInSec.value) {
+                            const timestamp = new Date(parseInt(snap.timestampInSec.value) * 1000);
+                            timestampText = `Posted: ${timestamp.toLocaleDateString()} ${timestamp.toLocaleTimeString()}`;
+                        }
+                        
+                        const filename = `snapchat_${mediaType}_${index + 1}.${fileExt}`;
+                        
+                        snapItem.innerHTML = `
+                            <div class="media-preview">
+                                ${previewContent}
+                            </div>
+                            <div class="media-info">
+                                <h3>${data.title || 'Snapchat Spotlight'} ${index + 1}</h3>
+                                <p>Type: ${mediaType}</p>
+                                <p>Format: ${fileExt.toUpperCase()}</p>
+                                ${timestampText ? `<p class="timestamp">${timestampText}</p>` : ''}
+                                ${mediaType === 'video' ? '<div class="preview-notice">Video preview not available due to Snapchat security. Download works fine.</div>' : ''}
+                                <button class="download-btn" data-url="${downloadUrl}" data-filename="${filename}">Download ${mediaType === 'video' ? 'Video' : 'Image'}</button>
+                            </div>
+                        `;
+                        
+                        mediaResults.appendChild(snapItem);
+                    });
+                }
+                
+                // Add thumbnail if available
+                if (data.data.thumbnailUrl && data.data.thumbnailUrl.value) {
+                    const thumbnailItem = document.createElement('div');
+                    thumbnailItem.className = 'media-item';
+                    
+                    thumbnailItem.innerHTML = `
+                        <div class="media-preview">
+                            <img src="${data.data.thumbnailUrl.value}" alt="Story thumbnail" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z\\'/></svg><p>Thumbnail Preview Not Available</p></div>'">
+                        </div>
+                        <div class="media-info">
+                            <h3>Story Thumbnail</h3>
+                            <p>Type: Image</p>
+                            <button class="download-btn" data-url="${data.data.thumbnailUrl.value}" data-filename="snapchat_thumbnail.jpg">Download Thumbnail</button>
+                        </div>
+                    `;
+                    
+                    mediaResults.appendChild(thumbnailItem);
+                }
+                
+                // Add download event listeners
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    if (btn.dataset.url) {
+                        btn.addEventListener('click', function() {
+                            downloadFile(this.dataset.url, this.dataset.filename);
+                        });
+                    }
+                });
+            }
+
+            // Display YouTube results
+            function displayYouTubeResults(data) {
+                // Add video title and info
+                if (data.title) {
+                    const titleElement = document.createElement('div');
+                    titleElement.className = 'video-title';
+                    
+                    let durationText = '';
+                    if (data.duration) {
+                        const minutes = Math.floor(data.duration / 60);
+                        const seconds = data.duration % 60;
+                        durationText = `Duration: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                    
+                    titleElement.innerHTML = `
+                        <h3>${data.title}</h3>
+                        ${durationText ? `<p>${durationText}</p>` : ''}
+                    `;
+                    mediaResults.appendChild(titleElement);
+                }
+                
+                // Add thumbnail preview
+                if (data.thumbnail) {
+                    const thumbnailItem = document.createElement('div');
+                    thumbnailItem.className = 'media-item';
+                    
+                    thumbnailItem.innerHTML = `
+                        <div class="media-preview">
+                            <img src="${data.thumbnail}" alt="Video thumbnail">
+                        </div>
+                        <div class="media-info">
+                            <h3>Video Thumbnail</h3>
+                            <p>Type: Image</p>
+                            <button class="download-btn" data-url="${data.thumbnail}" data-filename="youtube_thumbnail.jpg">Download Thumbnail</button>
+                        </div>
+                    `;
+                    
+                    mediaResults.appendChild(thumbnailItem);
+                }
+                
+                // Add video and audio formats
+                if (data.formats && data.formats.length > 0) {
+                    // Sort formats by quality (highest first)
+                    const sortedFormats = [...data.formats].sort((a, b) => {
+                        // Extract resolution numbers for comparison
+                        const getResolution = (quality) => {
+                            const match = quality.match(/(\d+)p/);
+                            return match ? parseInt(match[1]) : 0;
+                        };
+                        return getResolution(b.quality) - getResolution(a.quality);
+                    });
+                    
+                    sortedFormats.forEach((format, index) => {
+                        const formatItem = document.createElement('div');
+                        formatItem.className = 'media-item';
+                        
+                        let previewContent = '';
+                        if (format.type.includes('video') && format.url) {
+                            previewContent = `<video controls><source src="${format.url}" type="video/${format.extension}">Your browser does not support the video tag.</video>`;
+                        } else if (format.type.includes('audio') && format.url) {
+                            previewContent = `<audio controls><source src="${format.url}" type="audio/${format.extension}">Your browser does not support the audio tag.</audio>`;
+                        } else {
+                            previewContent = `<div class="video-placeholder">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <p>Preview not available</p>
+                            </div>`;
+                        }
+                        
+                        const filename = `youtube_${format.type.replace('_', '_')}_${format.quality.replace(/[^a-zA-Z0-9]/g, '_')}.${format.extension}`;
+                        
+                        formatItem.innerHTML = `
+                            <div class="media-preview">
+                                ${previewContent}
+                            </div>
+                            <div class="media-info">
+                                <h3>${format.quality}</h3>
+                                <p>Type: ${format.type}</p>
+                                <p>Format: ${format.extension.toUpperCase()}</p>
+                                <button class="download-btn" data-url="${format.url}" data-filename="${filename}">Download</button>
+                            </div>
+                        `;
+                        
+                        mediaResults.appendChild(formatItem);
+                    });
+                }
+                
+                // Add download event listeners
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    if (btn.dataset.url) {
+                        btn.addEventListener('click', function() {
+                            downloadFile(this.dataset.url, this.dataset.filename);
+                        });
+                    }
+                });
+            }
+
+            // Display TikTok results
+            function displayTikTokResults(data) {
+                // Add title and thumbnail
+                if (data.title) {
+                    const titleElement = document.createElement('div');
+                    titleElement.className = 'video-title';
+                    titleElement.innerHTML = `<h3>${data.title}</h3>`;
+                    mediaResults.appendChild(titleElement);
+                }
+                
+                // Add thumbnail preview
+                if (data.thumbnail) {
+                    const thumbnailItem = document.createElement('div');
+                    thumbnailItem.className = 'media-item';
+                    
+                    thumbnailItem.innerHTML = `
+                        <div class="media-preview">
+                            <img src="${data.thumbnail}" alt="Video thumbnail">
+                        </div>
+                        <div class="media-info">
+                            <h3>Video Thumbnail</h3>
+                            <p>Type: Image</p>
+                            <button class="download-btn" data-url="${data.thumbnail}" data-filename="tiktok_thumbnail.jpg">Download Thumbnail</button>
+                        </div>
+                    `;
+                    
+                    mediaResults.appendChild(thumbnailItem);
+                }
+                
+                // Add download options
+                if (data.downloads && data.downloads.length > 0) {
+                    data.downloads.forEach((download, index) => {
+                        const downloadItem = document.createElement('div');
+                        downloadItem.className = 'media-item';
+                        
+                        // Determine media type based on text
+                        let mediaType = 'video';
+                        let fileExt = 'mp4';
+                        
+                        if (download.text && download.text.toLowerCase().includes('mp3')) {
+                            mediaType = 'audio';
+                            fileExt = 'mp3';
+                        }
+                        
+                        let previewContent = '';
+                        if (mediaType === 'video' && download.url) {
+                            previewContent = `<video controls><source src="${download.url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+                        } else if (mediaType === 'audio' && download.url) {
+                            previewContent = `<audio controls><source src="${download.url}" type="audio/mpeg">Your browser does not support the audio tag.</audio>`;
+                        } else {
+                            previewContent = `<div class="video-placeholder">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <p>Preview not available</p>
+                            </div>`;
+                        }
+                        
+                        downloadItem.innerHTML = `
+                            <div class="media-preview">
+                                ${previewContent}
+                            </div>
+                            <div class="media-info">
+                                <h3>${download.text || `Download ${index + 1}`}</h3>
+                                <p>Type: ${mediaType}</p>
+                                <p>Format: ${fileExt.toUpperCase()}</p>
+                                <button class="download-btn" data-url="${download.url}" data-filename="tiktok_${mediaType}_${index+1}.${fileExt}">Download</button>
+                            </div>
+                        `;
+                        
+                        mediaResults.appendChild(downloadItem);
+                    });
+                }
+                
+                // Add download event listeners
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    if (btn.dataset.url) {
+                        btn.addEventListener('click', function() {
+                            downloadFile(this.dataset.url, this.dataset.filename);
+                        });
+                    }
+                });
+            }
+
+            // Create standard media item
+            function createMediaItem(media, index) {
+                const mediaItem = document.createElement('div');
+                mediaItem.className = 'media-item';
+                
+                let previewContent = '';
+                if (media.type === 'video') {
+                    previewContent = `<video controls><source src="${media.url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+                } else if (media.type === 'image') {
+                    previewContent = `<img src="${media.url}" alt="Media preview">`;
+                } else if (media.type === 'audio') {
+                    previewContent = `<audio controls><source src="${media.url}" type="audio/mpeg">Your browser does not support the audio tag.</audio>`;
+                } else {
+                    previewContent = `<div class="video-placeholder">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <p>Preview not available</p>
+                    </div>`;
+                }
+                
+                const filename = media.title 
+                    ? `${media.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.${media.type === 'video' ? 'mp4' : media.type === 'audio' ? 'mp3' : 'jpg'}`
+                    : `media_${index+1}.${media.type === 'video' ? 'mp4' : media.type === 'audio' ? 'mp3' : 'jpg'}`;
+                
+                mediaItem.innerHTML = `
+                    <div class="media-preview">
+                        ${previewContent}
+                    </div>
+                    <div class="media-info">
+                        <h3>${media.title || `Media ${index + 1}`}</h3>
+                        <p>Type: ${media.type || 'Unknown'}</p>
+                        <p>Quality: ${media.quality || 'Standard'}</p>
+                        <button class="download-btn" data-url="${media.url}" data-filename="${filename}">Download</button>
+                    </div>
+                `;
+                
+                // Add download event listener
+                const downloadBtn = mediaItem.querySelector('.download-btn');
+                downloadBtn.addEventListener('click', function() {
+                    downloadFile(this.dataset.url, this.dataset.filename);
+                });
+                
+                mediaResults.appendChild(mediaItem);
+            }
+
+            // Download file function
+            function downloadFile(url, filename) {
+                // Create a temporary anchor element
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+
+            // Show error function
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.add('active');
+                resultsSection.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
