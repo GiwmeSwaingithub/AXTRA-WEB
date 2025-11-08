@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AXTRA DOWNLOADER - Simple Media Downloader</title>
     <style>
-        /* All your existing CSS remains the same */
         :root {
             --primary-color: #4a6cf7;
             --secondary-color: #6b8aff;
@@ -13,6 +12,7 @@
             --light-color: #f5f8ff;
             --success-color: #28a745;
             --danger-color: #dc3545;
+            --warning-color: #ffc107;
             --border-radius: 8px;
             --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             --font-size-large: 1.1rem;
@@ -32,6 +32,7 @@
             color: var(--dark-color);
             line-height: 1.6;
             font-size: var(--font-size-medium);
+            padding-bottom: 60px; /* Reduced from 80px */
         }
 
         .container {
@@ -40,28 +41,112 @@
             padding: 0 20px;
         }
 
+        /* App Download Banner - Made thinner */
+        .app-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px; /* Reduced from 12px */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .app-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .app-icon {
+            width: 40px; /* Reduced from 50px */
+            height: 40px; /* Reduced from 50px */
+            background: white;
+            border-radius: 10px; /* Slightly smaller */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px; /* Reduced from 24px */
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .app-banner-text h3 {
+            font-size: 0.9rem; /* Reduced from 1rem */
+            margin-bottom: 2px;
+        }
+
+        .app-banner-text p {
+            font-size: 0.75rem; /* Reduced from 0.8rem */
+            opacity: 0.9;
+        }
+
+        .app-download-btn {
+            background: white;
+            color: #667eea;
+            padding: 6px 16px; /* Reduced from 8px 20px */
+            border-radius: 18px; /* Slightly smaller */
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem; /* Reduced from 0.9rem */
+            transition: transform 0.2s;
+        }
+
+        .app-download-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .banner-close {
+            position: absolute;
+            top: 3px; /* Adjusted for thinner banner */
+            right: 8px; /* Slightly closer */
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px; /* Reduced from 24px */
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .banner-close:hover {
+            opacity: 1;
+        }
+
+        /* Header - Made thinner */
         header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 1.5rem 0;
+            padding: 1rem 0; /* Reduced from 1.5rem */
             text-align: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
+            border-bottom-left-radius: 15px; /* Slightly smaller */
+            border-bottom-right-radius: 15px; /* Slightly smaller */
             box-shadow: var(--box-shadow);
         }
 
         header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.8rem; /* Reduced from 2rem */
+            margin-bottom: 0.3rem; /* Reduced from 0.5rem */
         }
 
         header p {
-            font-size: var(--font-size-medium);
+            font-size: 0.9rem; /* Reduced from var(--font-size-medium) */
             opacity: 0.9;
         }
 
         main {
-            padding: 2rem 0;
+            padding: 1.5rem 0; /* Reduced from 2rem */
         }
 
         .card {
@@ -221,6 +306,31 @@
         .detected-platform span {
             font-weight: 600;
             color: var(--primary-color);
+        }
+
+        /* YouTube Warning */
+        .youtube-warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-left: 4px solid #ff9800;
+            border-radius: var(--border-radius);
+            padding: 12px 15px;
+            margin-top: 10px;
+            display: none;
+            font-size: var(--font-size-small);
+            color: #856404;
+        }
+
+        .youtube-warning.active {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .youtube-warning svg {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
         }
 
         .results-section {
@@ -469,13 +579,131 @@
             font-weight: 600;
             margin-left: 8px;
         }
+        
+        .terms__string {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin: 20px 0;
+        }
+
+        .terms__string a {
+            color: #28a745;
+            text-decoration: none;
+        }
+
+        .instructions {
+            background: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .instructions h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .instruction-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+
+        /* Bottom Bar - Made thinner */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--dark-color), #2a3166);
+            color: white;
+            padding: 10px 20px; /* Reduced from 15px */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bottom-bar-content {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Reduced from 20px */
+            flex-wrap: wrap;
+        }
+
+        .bottom-bar-logo {
+            font-weight: bold;
+            font-size: 1rem; /* Reduced from 1.1rem */
+        }
+
+        .bottom-bar-links {
+            display: flex;
+            gap: 12px; /* Reduced from 15px */
+            flex-wrap: wrap;
+        }
+
+        .bottom-bar-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem; /* Reduced from 0.9rem */
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .bottom-bar-links a:hover {
+            opacity: 1;
+        }
+
+        .bottom-bar-social {
+            display: flex;
+            gap: 8px; /* Reduced from 10px */
+        }
+
+        .social-icon {
+            width: 28px; /* Reduced from 32px */
+            height: 28px; /* Reduced from 32px */
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .social-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
 
         footer {
             background-color: var(--dark-color);
             color: white;
             text-align: center;
-            padding: 1.5rem 0;
-            margin-top: 3rem;
+            padding: 1rem 0; /* Reduced from 1.5rem */
+            margin-top: 2rem; /* Reduced from 3rem */
             font-size: var(--font-size-small);
         }
 
@@ -506,11 +734,37 @@
             .dropdown-btn, .platform-option {
                 padding: 14px 15px;
             }
+
+            .app-banner {
+                flex-direction: column;
+                gap: 8px; /* Reduced from 10px */
+                text-align: center;
+            }
+
+            .app-banner-content {
+                flex-direction: column;
+            }
+
+            .bottom-bar {
+                flex-direction: column;
+                gap: 10px; /* Reduced from 15px */
+                text-align: center;
+                padding: 8px 15px; /* Reduced further for mobile */
+            }
+
+            .bottom-bar-content {
+                flex-direction: column;
+                gap: 8px; /* Reduced from 10px */
+            }
+
+            body {
+                padding-bottom: 80px; /* Reduced from 120px */
+            }
         }
 
         @media (max-width: 480px) {
             header h1 {
-                font-size: 1.7rem;
+                font-size: 1.5rem; /* Reduced from 1.7rem */
             }
             
             .section-title {
@@ -520,20 +774,37 @@
             .dropdown-btn, .platform-option {
                 padding: 16px 15px;
             }
+
+            body {
+                padding-bottom: 70px; /* Reduced from 120px */
+            }
         }
     </style>
 </head>
 <body>
+    <!-- App Download Banner - Made thinner -->
+    <div class="app-banner" id="appBanner">
+        <button class="banner-close" onclick="closeBanner()">&times;</button>
+        <div class="app-banner-content">
+            <div class="app-icon">A</div>
+            <div class="app-banner-text">
+                <h3>Get AXTRA App</h3>
+                <p>Faster downloads, no ads, offline mode</p>
+            </div>
+        </div>
+        <a href="#" class="app-download-btn">Download</a>
+    </div>
+
+    <!-- Header - Made thinner -->
     <header>
         <div class="container">
             <h1>AXTRA DOWNLOADER</h1>
-            <p>Simple media downloader for everyone</p>
+            <p>Download videos, images, and audio from popular platforms</p>
         </div>
     </header>
 
     <main class="container">
         <div class="card">
-            <h2 class="section-title">Download Media</h2>
             
             <div class="platform-selector">
                 <h3 class="section-title">Select Platform</h3>
@@ -559,6 +830,12 @@
                 <div class="detected-platform" id="detectedPlatform">
                     Detected platform: <span id="platformName"></span>
                 </div>
+                <div class="youtube-warning" id="youtubeWarning">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    </svg>
+                    <span><strong>Note:</strong> Some YouTube music videos may fail to download due to copyright restrictions.</span>
+                </div>
             </div>
 
             <div class="error-message" id="errorMessage"></div>
@@ -573,31 +850,98 @@
                 <div class="media-results" id="mediaResults">
                     <!-- Media items will be added by JavaScript -->
                 </div>
+               
+                <div class="json-viewer" id="jsonViewer"></div>
+                
                 <button class="toggle-json" id="toggleJson">
-                                        <!--                     <span>Show JSON Response</span>
-Media items will be added by JavaScript -->
-
+                 <!--<span>Show Raw API Response</span> 
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    </svg>-->
                 </button>
-                <div class="json-viewer" id="jsonViewer"></div>
+             
+            </div>
+        </div>
+
+        <div class="terms__string">
+            By using our service you accept our 
+            <a href="#" rel="nofollow">Terms of Service</a> and 
+            <a href="#" rel="nofollow">Privacy Policy</a>
+        </div>
+
+        <div class="instructions">
+            <h2>How to DOWNLOAD media</h2>
+            <div class="instruction-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <p>Copy the item URL that you want to download from any social media.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <p>Paste it in the input field above, our system will detect the platform automatically.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <p>Click Download and choose your quality</p>
+                </div>
             </div>
         </div>
     </main>
 
     <footer>
         <div class="container">
-            <p>&copy; 2023 AXTRA DOWNLOADER. All rights reserved.</p>
+            <p>&copy; 2025 AXTRA DOWNLOADER. All rights reserved.</p>
             <p>This tool is for educational purposes only.</p>
         </div>
     </footer>
 
+    <!-- Bottom Bar - Made thinner -->
+    <div class="bottom-bar">
+        <div class="bottom-bar-content">
+            <div class="bottom-bar-logo">AXTRA</div>
+            <div class="bottom-bar-links">
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+                <a href="#">FAQ</a>
+            </div>
+        </div>
+        <div class="bottom-bar-social">
+            <a href="#" class="social-icon" title="Facebook">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                </svg>
+            </a>
+            <a href="#" class="social-icon" title="Twitter">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                </svg>
+            </a>
+            <a href="#" class="social-icon" title="Instagram">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="none" stroke="white" stroke-width="2"/>
+                    <circle cx="17.5" cy="6.5" r="1.5" fill="white"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
     <script>
+        // Close banner function
+        function closeBanner() {
+            document.getElementById('appBanner').style.display = 'none';
+            localStorage.setItem('bannerClosed', 'true');
+        }
+
+        // Check if banner was closed before
+        if (localStorage.getItem('bannerClosed') === 'true') {
+            document.getElementById('appBanner').style.display = 'none';
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Platform data
-           const platforms = [
-             { id: 'tiktok', name: 'TikTok', color: '#000000', icon: 'T', domains: ['tiktok.com'] },
+            const platforms = [
+                { id: 'tiktok', name: 'TikTok', color: '#000000', icon: 'T', domains: ['tiktok.com'] },
                 { id: 'youtube', name: 'YouTube', color: '#ff0000', icon: 'Y', domains: ['youtube.com', 'youtu.be'] },
                 { id: 'meta', name: 'Facebook & Instagram', color: '#1877f2', icon: 'M', domains: ['facebook.com', 'fb.com', 'instagram.com'] },
                 { id: 'snapchat', name: 'Snapchat', color: '#fffc00', icon: 'S', domains: ['snapchat.com'] },
@@ -614,9 +958,7 @@ Media items will be added by JavaScript -->
                 { id: 'douyin', name: 'Douyin', color: '#000000', icon: 'D', domains: ['douyin.com'] },
                 { id: 'twitter', name: 'Twitter (X)', color: '#000000', icon: 'X', domains: ['twitter.com', 'x.com'] },
                 { id: 'threads', name: 'Threads', color: '#000000', icon: 'T', domains: ['threads.net'] },
-
             ];
-
 
             const dropdownBtn = document.getElementById('dropdownBtn');
             const dropdownContent = document.getElementById('dropdownContent');
@@ -627,10 +969,11 @@ Media items will be added by JavaScript -->
             const loading = document.getElementById('loading');
             const resultsSection = document.getElementById('resultsSection');
             const mediaResults = document.getElementById('mediaResults');
-            const toggleJson = document.getElementById('toggleJson');
             const jsonViewer = document.getElementById('jsonViewer');
+            const toggleJson = document.getElementById('toggleJson');
             const detectedPlatform = document.getElementById('detectedPlatform');
             const platformName = document.getElementById('platformName');
+            const youtubeWarning = document.getElementById('youtubeWarning');
 
             let selectedPlatform = 'meta';
             let apiResponse = null;
@@ -650,6 +993,13 @@ Media items will be added by JavaScript -->
                     selectedPlatform = platform.id;
                     selectedPlatformElement.textContent = platform.name;
                     dropdownContent.classList.remove('active');
+                    
+                    // Show/hide YouTube warning
+                    if (platform.id === 'youtube') {
+                        youtubeWarning.classList.add('active');
+                    } else {
+                        youtubeWarning.classList.remove('active');
+                    }
                 });
                 
                 dropdownContent.appendChild(platformOption);
@@ -667,20 +1017,17 @@ Media items will be added by JavaScript -->
                 }
             });
 
+            // Toggle JSON viewer
+            toggleJson.addEventListener('click', () => {
+                jsonViewer.classList.toggle('active');
+                toggleJson.innerHTML = jsonViewer.classList.contains('active') 
+                    ? '<span>Hide Raw API Response</span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10L8 6L12 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+                    : '<span>Show Raw API Response</span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            });
+
             // Download button click handler
             downloadBtn.addEventListener('click', fetchMedia);
 
-          /*  // Toggle JSON viewer
-            toggleJson.addEventListener('click', () => {
-                jsonViewer.classList.toggle('active');
-                toggleJson.querySelector('span').textContent = 
-                    jsonViewer.classList.contains('active') ? 'Hide JSON Response' : 'Show JSON Response';
-                
-                // Rotate arrow
-                const arrow = toggleJson.querySelector('svg');
-                arrow.style.transform = jsonViewer.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0)';
-            });
-*/
             // Handle Enter key in URL input
             mediaUrlInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -697,6 +1044,7 @@ Media items will be added by JavaScript -->
                 
                 if (!url) {
                     detectedPlatform.classList.remove('active');
+                    youtubeWarning.classList.remove('active');
                     return;
                 }
 
@@ -717,12 +1065,21 @@ Media items will be added by JavaScript -->
                         
                         // Update selected platform in dropdown
                         selectedPlatformElement.textContent = matchedPlatform.name;
+                        
+                        // Show/hide YouTube warning
+                        if (matchedPlatform.id === 'youtube') {
+                            youtubeWarning.classList.add('active');
+                        } else {
+                            youtubeWarning.classList.remove('active');
+                        }
                     } else {
                         detectedPlatform.classList.remove('active');
+                        youtubeWarning.classList.remove('active');
                     }
                 } catch (e) {
                     // Invalid URL, hide platform detection
                     detectedPlatform.classList.remove('active');
+                    youtubeWarning.classList.remove('active');
                 }
             }
 
@@ -750,8 +1107,15 @@ Media items will be added by JavaScript -->
                 downloadBtn.disabled = true;
 
                 try {
-                    const apiUrl = `https://api.axtra.eduniapps.com/api/${selectedPlatform}/download?url=${encodeURIComponent(url)}`;
-                    const response = await fetch(apiUrl);
+                    // Try primary API first
+                    let apiUrl = `https://universaldownloaderapi.vercel.app/api/${selectedPlatform}/download?url=${encodeURIComponent(url)}`;
+                    let response = await fetch(apiUrl);
+                    
+                    // If primary fails, try backup API
+                    if (!response.ok) {
+                        apiUrl = `https://api.axtra.eduniapps.com/api/${selectedPlatform}/download?url=${encodeURIComponent(url)}`;
+                        response = await fetch(apiUrl);
+                    }
                     
                     if (!response.ok) {
                         throw new Error(`API request failed with status ${response.status}`);
@@ -829,7 +1193,6 @@ Media items will be added by JavaScript -->
 
             // Display LinkedIn results
             function displayLinkedInResults(data) {
-                // Add developer credit if available
                 if (data.developer) {
                     const creditElement = document.createElement('div');
                     creditElement.className = 'video-title';
@@ -838,7 +1201,6 @@ Media items will be added by JavaScript -->
                     mediaResults.appendChild(creditElement);
                 }
 
-                // Handle videos array
                 if (data.videos && data.videos.length > 0) {
                     data.videos.forEach((videoUrl, index) => {
                         const mediaItem = document.createElement('div');
@@ -864,7 +1226,6 @@ Media items will be added by JavaScript -->
                             </div>`;
                         }
                         
-                        // Extract quality from URL if possible
                         let quality = 'HD';
                         if (videoUrl.includes('mp4-720p')) {
                             quality = '720p';
@@ -893,19 +1254,11 @@ Media items will be added by JavaScript -->
                     });
                 }
                 
-                // Add download event listeners
-                document.querySelectorAll('.download-btn').forEach(btn => {
-                    if (btn.dataset.url) {
-                        btn.addEventListener('click', function() {
-                            downloadFile(this.dataset.url, this.dataset.filename);
-                        });
-                    }
-                });
+                addDownloadListeners();
             }
 
             // Display Facebook results
             function displayFacebookResults(data) {
-                // Add developer credit if available
                 if (data.developer) {
                     const creditElement = document.createElement('div');
                     creditElement.className = 'video-title';
@@ -914,7 +1267,6 @@ Media items will be added by JavaScript -->
                     mediaResults.appendChild(creditElement);
                 }
 
-                // Handle data array with multiple quality options
                 if (data.data && data.data.length > 0) {
                     data.data.forEach((item, index) => {
                         const mediaItem = document.createElement('div');
@@ -956,19 +1308,11 @@ Media items will be added by JavaScript -->
                     });
                 }
                 
-                // Add download event listeners
-                document.querySelectorAll('.download-btn').forEach(btn => {
-                    if (btn.dataset.url) {
-                        btn.addEventListener('click', function() {
-                            downloadFile(this.dataset.url, this.dataset.filename);
-                        });
-                    }
-                });
+                addDownloadListeners();
             }
 
             // Display Instagram results
             function displayInstagramResults(data) {
-                // Add developer credit if available
                 if (data.developer) {
                     const creditElement = document.createElement('div');
                     creditElement.className = 'video-title';
@@ -977,7 +1321,6 @@ Media items will be added by JavaScript -->
                     mediaResults.appendChild(creditElement);
                 }
 
-                // Handle data array
                 if (data.data && data.data.length > 0) {
                     data.data.forEach((item, index) => {
                         const mediaItem = document.createElement('div');
@@ -995,10 +1338,9 @@ Media items will be added by JavaScript -->
                             </div>`;
                         }
                         
-                        // Determine if it's video or image based on URL
                         const isVideo = item.url && (item.url.includes('.mp4') || item.url.includes('video'));
-                        const fileExt = isVideo ?  'jpg' : 'mp4';
-                        const mediaType = isVideo ?  'Image': 'Video';
+                        const fileExt = isVideo ? 'mp4' : 'jpg';
+                        const mediaType = isVideo ? 'Video' : 'Image';
                         
                         const filename = `instagram_${mediaType.toLowerCase()}_${index + 1}.${fileExt}`;
                         
@@ -1007,7 +1349,7 @@ Media items will be added by JavaScript -->
                                 ${previewContent}
                             </div>
                             <div class="media-info">
-                                <h3>Instagram  ITEM </h3>
+                                <h3>Instagram Item</h3>
                                 <button class="download-btn" data-url="${item.url}" data-filename="${filename}">Download Item</button>
                             </div>
                         `;
@@ -1016,108 +1358,100 @@ Media items will be added by JavaScript -->
                     });
                 }
                 
-                // Add download event listeners
-                document.querySelectorAll('.download-btn').forEach(btn => {
-                    if (btn.dataset.url) {
-                        btn.addEventListener('click', function() {
-                            downloadFile(this.dataset.url, this.dataset.filename);
-                        });
-                    }
-                });
+                addDownloadListeners();
             }
 
             // Display SoundCloud results
             function displaySoundCloudResults(data) {
-                // Add title and info
+                if (data.developer) {
+                    const creditElement = document.createElement('div');
+                    creditElement.className = 'video-title';
+                    creditElement.style.background = '#e8f4fd';
+                    creditElement.innerHTML = `<p style="font-size: 0.8rem; color: #666;">API by AXTRA</p>`;
+                    mediaResults.appendChild(creditElement);
+                }
+
                 if (data.title) {
                     const titleElement = document.createElement('div');
                     titleElement.className = 'video-title';
-                    
-                    let durationText = '';
-                    if (data.duration) {
-                        durationText = `Duration: ${data.duration}`;
-                    }
-                    
                     titleElement.innerHTML = `
                         <h3>${data.title}</h3>
-                        ${durationText ? `<p>${durationText}</p>` : ''}
+                        ${data.description ? `<p>${data.description}</p>` : ''}
                     `;
                     mediaResults.appendChild(titleElement);
                 }
-                
-                // Add thumbnail preview
-                if (data.thumbnail) {
-                    const thumbnailItem = document.createElement('div');
-                    thumbnailItem.className = 'media-item';
+
+                if (data.audio && data.audio.url) {
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = 'media-item';
                     
-                    thumbnailItem.innerHTML = `
-                        <div class="media-preview">
-                            <img src="${data.thumbnail}" alt="Track thumbnail" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z\\'/></svg><p>Thumbnail Preview Not Available</p></div>'">
-                        </div>
-                        <div class="media-info">
-                            <h3>Track Thumbnail</h3>
-                            <p>Type: Image</p>
-                            <button class="download-btn" data-url="${data.thumbnail}" data-filename="soundcloud_thumbnail.jpg">Download Thumbnail</button>
-                        </div>
-                    `;
-                    
-                    mediaResults.appendChild(thumbnailItem);
-                }
-                
-                // Handle audio medias
-                if (data.medias && data.medias.length > 0) {
-                    // Filter only valid audio formats and remove duplicates
-                    const validMedias = data.medias.filter(media => 
-                        media.audioAvailable && 
-                        media.url && 
-                        !media.url.includes('urlmp4.com') && // Remove placeholder URLs
-                        media.extension !== 'ogg' // Prefer MP3 over OGG
-                    );
-                    
-                    // If no valid medias found, show all
-                    const mediasToShow = validMedias.length > 0 ? validMedias : data.medias;
-                    
-                    mediasToShow.forEach((media, index) => {
-                        const mediaItem = document.createElement('div');
-                        mediaItem.className = 'media-item';
-                        
-                        let previewContent = '';
-                        if (media.audioAvailable && media.url) {
-                            previewContent = `
-                                <div class="audio-preview">
-                                    <div class="audio-icon">
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-                                        </svg>
-                                    </div>
-                                    <audio controls>
-                                        <source src="${media.url}" type="audio/${media.extension}">
-                                        Your browser does not support the audio tag.
-                                    </audio>
-                                </div>
-                            `;
-                        } else {
-                            previewContent = `<div class="video-placeholder">
+                    const previewContent = `
+                        <div class="audio-preview">
+                            <div class="audio-icon">
                                 <svg viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                                 </svg>
-                                <p>Audio preview not available</p>
-                            </div>`;
-                        }
+                            </div>
+                        </div>
+                    `;
+                    
+                    const filename = `soundcloud_${data.title ? data.title.replace(/[^a-z0-9]/gi, '_').toLowerCase() : 'audio'}.mp3`;
+                    
+                    mediaItem.innerHTML = `
+                        <div class="media-preview">
+                            ${previewContent}
+                        </div>
+                        <div class="media-info">
+                            <h3>SoundCloud Audio</h3>
+                            <p>Type: Audio</p>
+                            <p>Format: MP3</p>
+                            <p>Platform: SoundCloud</p>
+                            <button class="download-btn" data-url="${data.audio.url}" data-filename="${filename}">Download Audio</button>
+                        </div>
+                    `;
+                    
+                    mediaResults.appendChild(mediaItem);
+                }
+                
+                addDownloadListeners();
+            }
+
+            // Display Pinterest results
+            function displayPinterestResults(data) {
+                if (data.developer) {
+                    const creditElement = document.createElement('div');
+                    creditElement.className = 'video-title';
+                    creditElement.style.background = '#e8f4fd';
+                    creditElement.innerHTML = `<p style="font-size: 0.8rem; color: #666;">API by AXTRA</p>`;
+                    mediaResults.appendChild(creditElement);
+                }
+
+                if (data.images && data.images.length > 0) {
+                    data.images.forEach((imageUrl, index) => {
+                        const mediaItem = document.createElement('div');
+                        mediaItem.className = 'media-item';
                         
-                        const filename = `soundcloud_${media.quality}_${index + 1}.${media.extension}`;
+                        const previewContent = imageUrl 
+                            ? `<img src="${imageUrl}" alt="Pinterest image" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M8 5v14l11-7z\\'/></svg><p>Preview not available</p></div>'">`
+                            : `<div class="video-placeholder">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <p>Preview not available</p>
+                            </div>`;
+                        
+                        const filename = `pinterest_image_${index + 1}.jpg`;
                         
                         mediaItem.innerHTML = `
                             <div class="media-preview">
                                 ${previewContent}
                             </div>
                             <div class="media-info">
-                                <h3>${media.quality || `Audio ${index + 1}`}</h3>
-                                <p>Type: Audio</p>
-                                <p>Format: ${media.extension.toUpperCase()}</p>
-                                ${media.formattedSize ? `<p class="size-info">Size: ${media.formattedSize}</p>` : ''}
-                                ${media.chunked ? '<div class="preview-notice">This audio file may require special handling for download.</div>' : ''}
-                                <button class="download-btn" data-url="${media.url}" data-filename="${filename}">Download Audio</button>
+                                <h3>Pinterest Image</h3>
+                                <p>Type: Image</p>
+                                <p>Format: JPG</p>
+                                <p>Platform: Pinterest</p>
+                                <button class="download-btn" data-url="${imageUrl}" data-filename="${filename}">Download Image</button>
                             </div>
                         `;
                         
@@ -1125,254 +1459,95 @@ Media items will be added by JavaScript -->
                     });
                 }
                 
-                // Add download event listeners
-                document.querySelectorAll('.download-btn').forEach(btn => {
-                    if (btn.dataset.url) {
-                        btn.addEventListener('click', function() {
-                            downloadFile(this.dataset.url, this.dataset.filename);
-                        });
-                    }
-                });
-            }
-
-            // Display Pinterest results
-            function displayPinterestResults(data) {
-                // Add title
-                if (data.title) {
-                    const titleElement = document.createElement('div');
-                    titleElement.className = 'video-title';
-                    titleElement.innerHTML = `<h3>${data.title}</h3>`;
-                    mediaResults.appendChild(titleElement);
-                }
-
-                // Handle downloads array
-                if (data.downloads && data.downloads.length > 0) {
-                    data.downloads.forEach((download, index) => {
-                        const downloadItem = document.createElement('div');
-                        downloadItem.className = 'media-item';
-                        
-                        // Determine media type based on format
-                        let mediaType = 'image';
-                        let fileExt = 'jpg';
-                        
-                        if (download.format === 'MP4') {
-                            mediaType = 'video';
-                            fileExt = 'mp4';
-                        } else if (download.format === 'JPG' || download.format === 'JPEG') {
-                            mediaType = 'image';
-                            fileExt = 'jpg';
-                        } else if (download.format === 'PNG') {
-                            mediaType = 'image';
-                            fileExt = 'png';
-                        }
-                        
-                        let previewContent = '';
-                        if (mediaType === 'video' && download.url) {
-                            previewContent = `<video controls><source src="${download.url}" type="video/mp4">Your browser does not support the video tag.</video>`;
-                        } else if (mediaType === 'image' && download.url) {
-                            previewContent = `<img src="${download.url}" alt="Pinterest media preview" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z\\'/></svg><p>Image Preview Not Available</p></div>'">`;
-                        } else {
-                            previewContent = `<div class="video-placeholder">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M8 5v14l11-7z"/>
-                                </svg>
-                                <p>Preview not available</p>
-                            </div>`;
-                        }
-                        
-                        const filename = `pinterest_${mediaType}_${index + 1}.${fileExt}`;
-                        
-                        downloadItem.innerHTML = `
-                            <div class="media-preview">
-                                ${previewContent}
-                            </div>
-                            <div class="media-info">
-                                <h3>${download.quality || `${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} ${index + 1}`}</h3>
-                                <p>Type: ${mediaType}</p>
-                                <p>Format: ${download.format}</p>
-                                <button class="download-btn" data-url="${download.url}" data-filename="${filename}">Download ${mediaType === 'video' ? 'Video' : 'Image'}</button>
-                            </div>
-                        `;
-                        
-                        mediaResults.appendChild(downloadItem);
-                    });
-                }
-                
-                // Add download event listeners
-                document.querySelectorAll('.download-btn').forEach(btn => {
-                    if (btn.dataset.url) {
-                        btn.addEventListener('click', function() {
-                            downloadFile(this.dataset.url, this.dataset.filename);
-                        });
-                    }
-                });
+                addDownloadListeners();
             }
 
             // Display Snapchat results
             function displaySnapchatResults(data) {
-                // Add title
-                if (data.title) {
-                    const titleElement = document.createElement('div');
-                    titleElement.className = 'video-title';
-                    titleElement.innerHTML = `<h3>${data.title}</h3>`;
-                    mediaResults.appendChild(titleElement);
+                if (data.developer) {
+                    const creditElement = document.createElement('div');
+                    creditElement.className = 'video-title';
+                    creditElement.style.background = '#e8f4fd';
+                    creditElement.innerHTML = `<p style="font-size: 0.8rem; color: #666;">API by AXTRA</p>`;
+                    mediaResults.appendChild(creditElement);
                 }
 
-                // Handle snapList
-                if (data.data && data.data.snapList && data.data.snapList.length > 0) {
-                    data.data.snapList.forEach((snap, index) => {
-                        const snapItem = document.createElement('div');
-                        snapItem.className = 'media-item';
-                        
-                        // Determine media type
-                        let mediaType = 'image';
-                        let fileExt = 'jpg';
-                        
-                        if (snap.snapMediaType === 1) {
-                            mediaType = 'image';
-                            fileExt = 'jpg';
-                        } else if (snap.snapMediaType === 2) {
-                            mediaType = 'video';
-                            fileExt = 'mp4';
-                        }
-                        
-                        // Use mediaUrl for download and mediaPreviewUrl for preview
-                        const downloadUrl = snap.snapUrls.mediaUrl;
-                        const previewUrl = snap.snapUrls.mediaPreviewUrl ? snap.snapUrls.mediaPreviewUrl.value : snap.snapUrls.mediaUrl;
-                        
-                        let previewContent = '';
-                        if (mediaType === 'video') {
-                            // For Snapchat videos, use a placeholder with download option
-                            previewContent = `
-                                <div class="video-placeholder">
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M8 5v14l11-7z"/>
-                                    </svg>
-                                    <p>Snapchat Video</p>
-                                    <p style="font-size: 0.8rem; margin-top: 5px;">Click download to save the video</p>
-                                </div>
-                            `;
-                        } else {
-                            previewContent = `<img src="${previewUrl}" alt="Snapchat media preview" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z\\'/></svg><p>Image Preview Not Available</p></div>'">`;
-                        }
-                        
-                        // Format timestamp
-                        let timestampText = '';
-                        if (snap.timestampInSec && snap.timestampInSec.value) {
-                            const timestamp = new Date(parseInt(snap.timestampInSec.value) * 1000);
-                            timestampText = `Posted: ${timestamp.toLocaleDateString()} ${timestamp.toLocaleTimeString()}`;
-                        }
-                        
-                        const filename = `snapchat_${mediaType}_${index + 1}.${fileExt}`;
-                        
-                        snapItem.innerHTML = `
-                            <div class="media-preview">
-                                ${previewContent}
-                            </div>
-                            <div class="media-info">
-                                <h3>${data.title || 'Snapchat Spotlight'} ${index + 1}</h3>
-                                <p>Type: ${mediaType}</p>
-                                <p>Format: ${fileExt.toUpperCase()}</p>
-                                ${timestampText ? `<p class="timestamp">${timestampText}</p>` : ''}
-                                ${mediaType === 'video' ? '<div class="preview-notice">Video preview not available due to Snapchat security. Download works fine.</div>' : ''}
-                                <button class="download-btn" data-url="${downloadUrl}" data-filename="${filename}">Download ${mediaType === 'video' ? 'Video' : 'Image'}</button>
+                if (data.media && data.media.url) {
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = 'media-item';
+                    
+                    let previewContent = '';
+                    if (data.media.type === 'video') {
+                        previewContent = `
+                            <div style="position: relative; width: 100%; height: 100%;">
+                                <video controls style="width: 100%; height: 100%; object-fit: contain;">
+                                    <source src="${data.media.url}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <div style="position: absolute; top: 10px; right: 10px; background: rgba(255, 252, 0, 0.8); color: black; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">Snapchat</div>
                             </div>
                         `;
-                        
-                        mediaResults.appendChild(snapItem);
-                    });
-                }
-                
-                // Add thumbnail if available
-                if (data.data.thumbnailUrl && data.data.thumbnailUrl.value) {
-                    const thumbnailItem = document.createElement('div');
-                    thumbnailItem.className = 'media-item';
+                    } else {
+                        previewContent = `<img src="${data.media.url}" alt="Snapchat media" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M8 5v14l11-7z\\'/></svg><p>Preview not available</p></div>'">`;
+                    }
                     
-                    thumbnailItem.innerHTML = `
+                    const fileExt = data.media.type === 'video' ? 'mp4' : 'jpg';
+                    const mediaType = data.media.type === 'video' ? 'Video' : 'Image';
+                    
+                    const filename = `snapchat_${mediaType.toLowerCase()}.${fileExt}`;
+                    
+                    mediaItem.innerHTML = `
                         <div class="media-preview">
-                            <img src="${data.data.thumbnailUrl.value}" alt="Story thumbnail" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z\\'/></svg><p>Thumbnail Preview Not Available</p></div>'">
+                            ${previewContent}
                         </div>
                         <div class="media-info">
-                            <h3>Story Thumbnail</h3>
-                            <p>Type: Image</p>
-                            <button class="download-btn" data-url="${data.data.thumbnailUrl.value}" data-filename="snapchat_thumbnail.jpg">Download Thumbnail</button>
+                            <h3>Snapchat ${mediaType}</h3>
+                            <p>Type: ${mediaType}</p>
+                            <p>Format: ${fileExt.toUpperCase()}</p>
+                            <p>Platform: Snapchat</p>
+                            <button class="download-btn" data-url="${data.media.url}" data-filename="${filename}">Download ${mediaType}</button>
                         </div>
                     `;
                     
-                    mediaResults.appendChild(thumbnailItem);
+                    mediaResults.appendChild(mediaItem);
                 }
                 
-                // Add download event listeners
-                document.querySelectorAll('.download-btn').forEach(btn => {
-                    if (btn.dataset.url) {
-                        btn.addEventListener('click', function() {
-                            downloadFile(this.dataset.url, this.dataset.filename);
-                        });
-                    }
-                });
+                addDownloadListeners();
             }
 
             // Display YouTube results
             function displayYouTubeResults(data) {
-                // Add video title and info
+                if (data.developer) {
+                    const creditElement = document.createElement('div');
+                    creditElement.className = 'video-title';
+                    creditElement.style.background = '#e8f4fd';
+                    creditElement.innerHTML = `<p style="font-size: 0.8rem; color: #666;">API by AXTRA</p>`;
+                    mediaResults.appendChild(creditElement);
+                }
+
                 if (data.title) {
                     const titleElement = document.createElement('div');
                     titleElement.className = 'video-title';
-                    
-                    let durationText = '';
-                    if (data.duration) {
-                        const minutes = Math.floor(data.duration / 60);
-                        const seconds = data.duration % 60;
-                        durationText = `Duration: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-                    }
-                    
                     titleElement.innerHTML = `
                         <h3>${data.title}</h3>
-                        ${durationText ? `<p>${durationText}</p>` : ''}
+                        ${data.description ? `<p>${data.description.substring(0, 150)}${data.description.length > 150 ? '...' : ''}</p>` : ''}
                     `;
                     mediaResults.appendChild(titleElement);
                 }
-                
-                // Add thumbnail preview
-                if (data.thumbnail) {
-                    const thumbnailItem = document.createElement('div');
-                    thumbnailItem.className = 'media-item';
-                    
-                    thumbnailItem.innerHTML = `
-                        <div class="media-preview">
-                            <img src="${data.thumbnail}" alt="Video thumbnail">
-                        </div>
-                        <div class="media-info">
-                            <h3>Video Thumbnail</h3>
-                            <p>Type: Image</p>
-                            <button class="download-btn" data-url="${data.thumbnail}" data-filename="youtube_thumbnail.jpg">Download Thumbnail</button>
-                        </div>
-                    `;
-                    
-                    mediaResults.appendChild(thumbnailItem);
-                }
-                
-                // Add video and audio formats
+
                 if (data.formats && data.formats.length > 0) {
-                    // Sort formats by quality (highest first)
-                    const sortedFormats = [...data.formats].sort((a, b) => {
-                        // Extract resolution numbers for comparison
-                        const getResolution = (quality) => {
-                            const match = quality.match(/(\d+)p/);
-                            return match ? parseInt(match[1]) : 0;
-                        };
-                        return getResolution(b.quality) - getResolution(a.quality);
-                    });
-                    
-                    sortedFormats.forEach((format, index) => {
-                        const formatItem = document.createElement('div');
-                        formatItem.className = 'media-item';
+                    data.formats.forEach((format, index) => {
+                        const mediaItem = document.createElement('div');
+                        mediaItem.className = 'media-item';
                         
                         let previewContent = '';
-                        if (format.type.includes('video') && format.url) {
-                            previewContent = `<video controls><source src="${format.url}" type="video/${format.extension}">Your browser does not support the video tag.</video>`;
-                        } else if (format.type.includes('audio') && format.url) {
-                            previewContent = `<audio controls><source src="${format.url}" type="audio/${format.extension}">Your browser does not support the audio tag.</audio>`;
+                        if (format.thumbnail) {
+                            previewContent = `
+                                <div style="position: relative; width: 100%; height: 100%;">
+                                    <img src="${format.thumbnail}" alt="YouTube video thumbnail" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M8 5v14l11-7z\\'/></svg><p>Preview not available</p></div>'">
+                                    <div style="position: absolute; top: 10px; right: 10px; background: rgba(255,0,0,0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">YouTube</div>
+                                </div>
+                            `;
                         } else {
                             previewContent = `<div class="video-placeholder">
                                 <svg viewBox="0 0 24 24" fill="currentColor">
@@ -1382,116 +1557,92 @@ Media items will be added by JavaScript -->
                             </div>`;
                         }
                         
-                        const filename = `youtube_${format.type.replace('_', '_')}_${format.quality.replace(/[^a-zA-Z0-9]/g, '_')}.${format.extension}`;
+                        const quality = format.quality || 'Unknown';
+                        const fileExt = format.container || 'mp4';
+                        const hasAudio = format.hasAudio !== false;
                         
-                        formatItem.innerHTML = `
+                        const filename = `youtube_${quality.replace(/[^a-zA-Z0-9]/g, '_')}_${index + 1}.${fileExt}`;
+                        
+                        mediaItem.innerHTML = `
                             <div class="media-preview">
                                 ${previewContent}
                             </div>
                             <div class="media-info">
-                                <h3>${format.quality}</h3>
-                                <p>Type: ${format.type}</p>
-                                <p>Format: ${format.extension.toUpperCase()}</p>
-                                <button class="download-btn" data-url="${format.url}" data-filename="${filename}">Download</button>
+                                <h3>YouTube Video <span class="quality-badge">${quality}</span></h3>
+                                <p>Type: Video</p>
+                                <p>Format: ${fileExt.toUpperCase()}</p>
+                                <p>Audio: ${hasAudio ? 'Yes' : 'No'}</p>
+                                <button class="download-btn" data-url="${format.url}" data-filename="${filename}">Download Video</button>
                             </div>
                         `;
                         
-                        mediaResults.appendChild(formatItem);
+                        mediaResults.appendChild(mediaItem);
                     });
                 }
                 
-                // Add download event listeners
-                document.querySelectorAll('.download-btn').forEach(btn => {
-                    if (btn.dataset.url) {
-                        btn.addEventListener('click', function() {
-                            downloadFile(this.dataset.url, this.dataset.filename);
-                        });
-                    }
-                });
+                addDownloadListeners();
             }
 
             // Display TikTok results
             function displayTikTokResults(data) {
-                // Add title and thumbnail
+                if (data.developer) {
+                    const creditElement = document.createElement('div');
+                    creditElement.className = 'video-title';
+                    creditElement.style.background = '#e8f4fd';
+                    creditElement.innerHTML = `<p style="font-size: 0.8rem; color: #666;">API by AXTRA</p>`;
+                    mediaResults.appendChild(creditElement);
+                }
+
                 if (data.title) {
                     const titleElement = document.createElement('div');
                     titleElement.className = 'video-title';
-                    titleElement.innerHTML = `<h3>${data.title}</h3>`;
+                    titleElement.innerHTML = `
+                        <h3>${data.title}</h3>
+                        <p>By: ${data.author || 'Unknown'}</p>
+                    `;
                     mediaResults.appendChild(titleElement);
                 }
-                
-                // Add thumbnail preview
-                if (data.thumbnail) {
-                    const thumbnailItem = document.createElement('div');
-                    thumbnailItem.className = 'media-item';
+
+                if (data.video && data.video.url) {
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = 'media-item';
                     
-                    thumbnailItem.innerHTML = `
+                    let previewContent = '';
+                    if (data.video.cover) {
+                        previewContent = `
+                            <div style="position: relative; width: 100%; height: 100%;">
+                                <img src="${data.video.cover}" alt="TikTok video cover" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'video-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'currentColor\\'><path d=\\'M8 5v14l11-7z\\'/></svg><p>Preview not available</p></div>'">
+                                <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;">TikTok</div>
+                            </div>
+                        `;
+                    } else {
+                        previewContent = `<div class="video-placeholder">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            <p>Preview not available</p>
+                        </div>`;
+                    }
+                    
+                    const filename = `tiktok_video_${data.title ? data.title.replace(/[^a-z0-9]/gi, '_').toLowerCase() : Date.now()}.mp4`;
+                    
+                    mediaItem.innerHTML = `
                         <div class="media-preview">
-                            <img src="${data.thumbnail}" alt="Video thumbnail">
+                            ${previewContent}
                         </div>
                         <div class="media-info">
-                            <h3>Video Thumbnail</h3>
-                            <p>Type: Image</p>
-                            <button class="download-btn" data-url="${data.thumbnail}" data-filename="tiktok_thumbnail.jpg">Download Thumbnail</button>
+                            <h3>TikTok Video</h3>
+                            <p>Type: Video</p>
+                            <p>Format: MP4</p>
+                            <p>Platform: TikTok</p>
+                            <button class="download-btn" data-url="${data.video.url}" data-filename="${filename}">Download Video</button>
                         </div>
                     `;
                     
-                    mediaResults.appendChild(thumbnailItem);
+                    mediaResults.appendChild(mediaItem);
                 }
                 
-                // Add download options
-                if (data.downloads && data.downloads.length > 0) {
-                    data.downloads.forEach((download, index) => {
-                        const downloadItem = document.createElement('div');
-                        downloadItem.className = 'media-item';
-                        
-                        // Determine media type based on text
-                        let mediaType = 'video';
-                        let fileExt = 'mp4';
-                        
-                        if (download.text && download.text.toLowerCase().includes('mp3')) {
-                            mediaType = 'audio';
-                            fileExt = 'mp3';
-                        }
-                        
-                        let previewContent = '';
-                        if (mediaType === 'video' && download.url) {
-                            previewContent = `<video controls><source src="${download.url}" type="video/mp4">Your browser does not support the video tag.</video>`;
-                        } else if (mediaType === 'audio' && download.url) {
-                            previewContent = `<audio controls><source src="${download.url}" type="audio/mpeg">Your browser does not support the audio tag.</audio>`;
-                        } else {
-                            previewContent = `<div class="video-placeholder">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M8 5v14l11-7z"/>
-                                </svg>
-                                <p>Preview not available</p>
-                            </div>`;
-                        }
-                        
-                        downloadItem.innerHTML = `
-                            <div class="media-preview">
-                                ${previewContent}
-                            </div>
-                            <div class="media-info">
-                                <h3>${download.text || `Download ${index + 1}`}</h3>
-                                <p>Type: ${mediaType}</p>
-                                <p>Format: ${fileExt.toUpperCase()}</p>
-                                <button class="download-btn" data-url="${download.url}" data-filename="tiktok_${mediaType}_${index+1}.${fileExt}">Download</button>
-                            </div>
-                        `;
-                        
-                        mediaResults.appendChild(downloadItem);
-                    });
-                }
-                
-                // Add download event listeners
-                document.querySelectorAll('.download-btn').forEach(btn => {
-                    if (btn.dataset.url) {
-                        btn.addEventListener('click', function() {
-                            downloadFile(this.dataset.url, this.dataset.filename);
-                        });
-                    }
-                });
+                addDownloadListeners();
             }
 
             // Create standard media item
@@ -1505,7 +1656,13 @@ Media items will be added by JavaScript -->
                 } else if (media.type === 'image') {
                     previewContent = `<img src="${media.url}" alt="Media preview">`;
                 } else if (media.type === 'audio') {
-                    previewContent = `<audio controls><source src="${media.url}" type="audio/mpeg">Your browser does not support the audio tag.</audio>`;
+                    previewContent = `<div class="audio-preview">
+                        <div class="audio-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                            </svg>
+                        </div>
+                    </div>`;
                 } else {
                     previewContent = `<div class="video-placeholder">
                         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -1531,24 +1688,41 @@ Media items will be added by JavaScript -->
                     </div>
                 `;
                 
-                // Add download event listener
-                const downloadBtn = mediaItem.querySelector('.download-btn');
-                downloadBtn.addEventListener('click', function() {
-                    downloadFile(this.dataset.url, this.dataset.filename);
-                });
-                
                 mediaResults.appendChild(mediaItem);
+            }
+
+            // Add download event listeners to all download buttons
+            function addDownloadListeners() {
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    if (btn.dataset.url && !btn.hasAttribute('data-listener')) {
+                        btn.setAttribute('data-listener', 'true');
+                        btn.addEventListener('click', function() {
+                            downloadFile(this.dataset.url, this.dataset.filename);
+                        });
+                    }
+                });
             }
 
             // Download file function
             function downloadFile(url, filename) {
-                // Create a temporary anchor element
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                // Show a loading state on the button
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'Downloading...';
+                button.disabled = true;
+                
+                setTimeout(() => {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    // Reset button state
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 500);
             }
 
             // Show error function
