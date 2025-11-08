@@ -32,96 +32,13 @@
             color: var(--dark-color);
             line-height: 1.6;
             font-size: var(--font-size-medium);
-            padding-bottom: 60px; /* Reduced from 80px */
+            padding-bottom: 70px; /* Space for bottom bar */
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 0 20px;
-        }
-
-        /* App Download Banner - Made thinner */
-        .app-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 8px 20px; /* Reduced from 12px */
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            animation: slideDown 0.5s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
-
-        .app-banner-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 1;
-        }
-
-        .app-icon {
-            width: 40px; /* Reduced from 50px */
-            height: 40px; /* Reduced from 50px */
-            background: white;
-            border-radius: 10px; /* Slightly smaller */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px; /* Reduced from 24px */
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .app-banner-text h3 {
-            font-size: 0.9rem; /* Reduced from 1rem */
-            margin-bottom: 2px;
-        }
-
-        .app-banner-text p {
-            font-size: 0.75rem; /* Reduced from 0.8rem */
-            opacity: 0.9;
-        }
-
-        .app-download-btn {
-            background: white;
-            color: #667eea;
-            padding: 6px 16px; /* Reduced from 8px 20px */
-            border-radius: 18px; /* Slightly smaller */
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem; /* Reduced from 0.9rem */
-            transition: transform 0.2s;
-        }
-
-        .app-download-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .banner-close {
-            position: absolute;
-            top: 3px; /* Adjusted for thinner banner */
-            right: 8px; /* Slightly closer */
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px; /* Reduced from 24px */
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-
-        .banner-close:hover {
-            opacity: 1;
         }
 
         /* Header - Made thinner */
@@ -630,80 +547,77 @@
             margin: 0 auto 15px;
         }
 
-        /* Bottom Bar - Made thinner */
-        .bottom-bar {
+        /* Bottom App Bar - Ultra Slim */
+        .bottom-app-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, var(--dark-color), #2a3166);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 10px 20px; /* Reduced from 15px */
+            padding: 8px 20px; /* Ultra slim padding */
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
             z-index: 1000;
+        }
+
+        .app-bar-content {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
+            margin-bottom: 4px; /* Small space for description */
         }
 
-        .bottom-bar-content {
+        .app-bar-info {
             display: flex;
             align-items: center;
-            gap: 15px; /* Reduced from 20px */
-            flex-wrap: wrap;
+            gap: 12px;
         }
 
-        .bottom-bar-logo {
-            font-weight: bold;
-            font-size: 1rem; /* Reduced from 1.1rem */
-        }
-
-        .bottom-bar-links {
-            display: flex;
-            gap: 12px; /* Reduced from 15px */
-            flex-wrap: wrap;
-        }
-
-        .bottom-bar-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 0.85rem; /* Reduced from 0.9rem */
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-
-        .bottom-bar-links a:hover {
-            opacity: 1;
-        }
-
-        .bottom-bar-social {
-            display: flex;
-            gap: 8px; /* Reduced from 10px */
-        }
-
-        .social-icon {
-            width: 28px; /* Reduced from 32px */
-            height: 28px; /* Reduced from 32px */
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
+        .app-icon {
+            width: 32px; /* Smaller icon */
+            height: 32px; /* Smaller icon */
+            background: white;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s;
-            text-decoration: none;
-            color: white;
+            font-size: 16px; /* Smaller font */
+            font-weight: bold;
+            color: #667eea;
         }
 
-        .social-icon:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .app-name {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .app-download-btn {
+            background: white;
+            color: #667eea;
+            padding: 6px 16px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: transform 0.2s;
+        }
+
+        .app-download-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .app-description {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            text-align: center;
         }
 
         footer {
             background-color: var(--dark-color);
             color: white;
             text-align: center;
-            padding: 1rem 0; /* Reduced from 1.5rem */
-            margin-top: 2rem; /* Reduced from 3rem */
+            padding: 1rem 0;
+            margin-top: 2rem;
             font-size: var(--font-size-small);
         }
 
@@ -735,36 +649,41 @@
                 padding: 14px 15px;
             }
 
-            .app-banner {
-                flex-direction: column;
-                gap: 8px; /* Reduced from 10px */
-                text-align: center;
+            .bottom-app-bar {
+                padding: 6px 15px; /* Even slimmer on mobile */
             }
 
-            .app-banner-content {
-                flex-direction: column;
+            .app-bar-content {
+                margin-bottom: 3px;
             }
 
-            .bottom-bar {
-                flex-direction: column;
-                gap: 10px; /* Reduced from 15px */
-                text-align: center;
-                padding: 8px 15px; /* Reduced further for mobile */
+            .app-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
             }
 
-            .bottom-bar-content {
-                flex-direction: column;
-                gap: 8px; /* Reduced from 10px */
+            .app-name {
+                font-size: 0.9rem;
+            }
+
+            .app-download-btn {
+                padding: 5px 12px;
+                font-size: 0.8rem;
+            }
+
+            .app-description {
+                font-size: 0.7rem;
             }
 
             body {
-                padding-bottom: 80px; /* Reduced from 120px */
+                padding-bottom: 60px; /* Reduced for mobile */
             }
         }
 
         @media (max-width: 480px) {
             header h1 {
-                font-size: 1.5rem; /* Reduced from 1.7rem */
+                font-size: 1.5rem;
             }
             
             .section-title {
@@ -775,27 +694,22 @@
                 padding: 16px 15px;
             }
 
+            .app-bar-info {
+                gap: 8px;
+            }
+
+            .app-name {
+                font-size: 0.85rem;
+            }
+
             body {
-                padding-bottom: 70px; /* Reduced from 120px */
+                padding-bottom: 55px; /* Further reduced for small screens */
             }
         }
     </style>
 </head>
 <body>
-    <!-- App Download Banner - Made thinner -->
-    <div class="app-banner" id="appBanner">
-        <button class="banner-close" onclick="closeBanner()">&times;</button>
-        <div class="app-banner-content">
-            <div class="app-icon">A</div>
-            <div class="app-banner-text">
-                <h3>Get AXTRA App</h3>
-                <p>Faster downloads, no ads, offline mode</p>
-            </div>
-        </div>
-        <a href="#" class="app-download-btn">Download</a>
-    </div>
-
-    <!-- Header - Made thinner -->
+    <!-- Header -->
     <header>
         <div class="container">
             <h1>AXTRA DOWNLOADER</h1>
@@ -850,16 +764,13 @@
                 <div class="media-results" id="mediaResults">
                     <!-- Media items will be added by JavaScript -->
                 </div>
-               
                 <div class="json-viewer" id="jsonViewer"></div>
-                
                 <button class="toggle-json" id="toggleJson">
-                 <!--<span>Show Raw API Response</span> 
+                    <span>Show Raw API Response</span>
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>-->
+                    </svg>
                 </button>
-             
             </div>
         </div>
 
@@ -895,50 +806,19 @@
         </div>
     </footer>
 
-    <!-- Bottom Bar - Made thinner -->
-    <div class="bottom-bar">
-        <div class="bottom-bar-content">
-            <div class="bottom-bar-logo">AXTRA</div>
-            <div class="bottom-bar-links">
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
-                <a href="#">FAQ</a>
+    <!-- Bottom App Bar - Ultra Slim -->
+    <div class="bottom-app-bar">
+        <div class="app-bar-content">
+            <div class="app-bar-info">
+                <div class="app-icon">A</div>
+                <div class="app-name">AXTRA</div>
             </div>
+            <a href="#" class="app-download-btn">Download App</a>
         </div>
-        <div class="bottom-bar-social">
-            <a href="#" class="social-icon" title="Facebook">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-                </svg>
-            </a>
-            <a href="#" class="social-icon" title="Twitter">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
-                </svg>
-            </a>
-            <a href="#" class="social-icon" title="Instagram">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="none" stroke="white" stroke-width="2"/>
-                    <circle cx="17.5" cy="6.5" r="1.5" fill="white"/>
-                </svg>
-            </a>
-        </div>
+        <div class="app-description">Faster downloads, no ads, offline mode</div>
     </div>
 
     <script>
-        // Close banner function
-        function closeBanner() {
-            document.getElementById('appBanner').style.display = 'none';
-            localStorage.setItem('bannerClosed', 'true');
-        }
-
-        // Check if banner was closed before
-        if (localStorage.getItem('bannerClosed') === 'true') {
-            document.getElementById('appBanner').style.display = 'none';
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             const platforms = [
                 { id: 'tiktok', name: 'TikTok', color: '#000000', icon: 'T', domains: ['tiktok.com'] },
