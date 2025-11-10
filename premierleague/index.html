@@ -5,65 +5,147 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Premier League — Embedded</title>
 <style>
-  html,body{margin:0;height:100%;background:#000;color:#fff;font-family:system-ui,Segoe UI,Roboto,Arial}
-  #frame-wrap{width:100%;height:100%;position:relative}
-  iframe{width:100%;height:100%;border:0;display:block}
-  #error{display:none;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);padding:20px;text-align:center}
+  :root{--bg:#000;--ui:#fff}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ui);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+  #frame-wrap{width:100%;height:100%;position:relative;overflow:hidden}
+  iframe{width:100%;height:100%;border:0;display:block;background:#000}
+  /* full-screen invisible overlay to capture the first tap on mobile */
+  #tap-overlay{position:absolute;inset:0;background:transparent;cursor:pointer;touch-action:manipulation}
+  /* small visible unmute hint (optional) */
+  #unmute-hint{
+    position:absolute;right:12px;top:12px;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,0.5);
+    color:var(--ui);font-size:13px;backdrop-filter:blur(4px);z-index:30;
+    display:flex;gap:8px;align-items:center;pointer-events:auto;
+  }
+  #error{display:none;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);padding:20px;text-align:center;z-index:40}
+  button.icon-btn{background:transparent;border:0;color:var(--ui);font-size:14px;padding:6px;cursor:pointer}
 </style>
 </head>
 <body>
-  <div id="frame-wrap" aria-live="polite"></div>
-  <div id="error" role="alert">⚠️ Access blocked or failed to load. Try desktop mode.</div>
+  <div id="frame-wrap" aria-live="polite">
+    <!-- iframe will be inserted here by JS -->
+    <div id="error" role="alert">⚠️ Access blocked or failed to load. Try desktop mode.</div>
+  </div>
 
 <script>
-  // --- small obfuscation: base64 split into chunks to avoid obvious string in source ---
-  const encodedParts = [
-    "aHR0cHM6Ly9zdHJlYW1jcmljaGQuY29t",
-    "L3VwZGF0ZS9za3lzNS5waHA="
-  ];
-  // join parts, decode
-  const encoded = encodedParts.join('');
-  let url;
-  try {
-    url = atob(encoded);
-  } catch (e) {
-    console.error('Decoding failed', e);
-    document.getElementById('error').style.display = 'block';
-  }
+/*
+  Behavior:
+  - initial iframe created MUTED + playsinline so mobile autoplay works
+  - a full-screen invisible overlay (#tap-overlay) captures the first tap to avoid navigating into iframe content
+  - when user taps, overlay is removed and we replace the iframe with a new one WITHOUT muted attribute (user gesture) so the player can unmute
+  - obfuscated URL via Base64-split (casual obfuscation only)
+*/
 
-  // create iframe dynamically (so src isn't visible in static HTML)
-  if (url) {
-    const wrap = document.getElementById('frame-wrap');
-    const iframe = document.createElement('iframe');
+const encodedParts = [
+  "aHR0cHM6Ly9zdHJlYW1jcmljaGQuY29t",
+  "L3VwZGF0ZS9za3lzNS5waHA="
+];
+const encoded = encodedParts.join('');
+let streamUrl;
+try {
+  streamUrl = atob(encoded);
+} catch (e) {
+  console.error('Decoding failed', e);
+  showError();
+}
 
-    // set attributes
-    iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.src = url;
+const wrap = document.getElementById('frame-wrap');
 
-    // desktop UA hint (note: browsers generally ignore changing navigator.userAgent; we rely on dynamic load)
-    // fallback/error handling
-    iframe.addEventListener('error', () => {
-      iframe.style.display = 'none';
-      document.getElementById('error').style.display = 'block';
-    });
+function showError(){
+  document.getElementById('error').style.display = 'flex';
+}
 
-    // append to DOM
-    wrap.appendChild(iframe);
+// create initial muted iframe (so autoplay works on mobile)
+function createInitialIframe(){
+  const iframe = document.createElement('iframe');
+  iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+  iframe.setAttribute('allowfullscreen', '');
+  iframe.setAttribute('playsinline', '');    // iOS inline
+  iframe.setAttribute('muted', '');          // start muted so autoplay works
+  // src assigned last
+  iframe.src = streamUrl;
+  // basic error handling
+  iframe.addEventListener('error', () => {
+    iframe.style.display = 'none';
+    showError();
+  });
+  return iframe;
+}
 
-    // timeout fallback: sometimes cross-origin blocks hide errors, so check for empty doc
-    setTimeout(() => {
-      try {
-        const doc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!doc || !doc.body || doc.body.innerHTML.trim() === '') {
-          iframe.style.display = 'none';
-          document.getElementById('error').style.display = 'block';
-        }
-      } catch (err) {
-        // likely cross-origin — we can't inspect, so assume ok; if blocked, user sees blank -> error shown earlier on 'error' or user will switch to desktop mode
+// create unmuted iframe after user gesture (appends timestamp to bust cache / trigger user-gesture)
+function createUnmutedIframe(){
+  const iframe = document.createElement('iframe');
+  iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+  iframe.setAttribute('allowfullscreen', '');
+  iframe.setAttribute('playsinline', '');
+  // do NOT set muted
+  // add cache-buster to encourage fresh load as a result of user gesture
+  const sep = streamUrl.includes('?') ? '&' : '?';
+  iframe.src = streamUrl + sep + '_=' + Date.now();
+  iframe.addEventListener('error', () => {
+    iframe.style.display = 'none';
+    showError();
+  });
+  return iframe;
+}
+
+// insert initial iframe + overlay + visible hint
+if (streamUrl) {
+  const initial = createInitialIframe();
+  wrap.appendChild(initial);
+
+  // invisible full-screen overlay to capture first tap without letting the iframe handle it
+  const overlay = document.createElement('div');
+  overlay.id = 'tap-overlay';
+  overlay.title = 'Tap to enable audio';
+  // visible unmute hint (small UI)
+  const hint = document.createElement('div');
+  hint.id = 'unmute-hint';
+  hint.innerHTML = '<span style="font-weight:600;font-size:13px">Tap to unmute</span>';
+  // attach overlay and hint
+  wrap.appendChild(overlay);
+  wrap.appendChild(hint);
+
+  // capture first touch/click
+  const onFirstTap = (ev) => {
+    ev.preventDefault(); // important: prevent default navigation behaviors
+    // remove overlay and hint so subsequent interactions go to the iframe
+    overlay.removeEventListener('click', onFirstTap);
+    overlay.removeEventListener('touchend', onFirstTap);
+    overlay.remove();
+    hint.remove();
+
+    // replace the muted iframe with an unmuted one — this counts as a user gesture
+    try {
+      const unmuted = createUnmutedIframe();
+      // remove old iframe (if still present)
+      if (initial && initial.parentNode) initial.parentNode.removeChild(initial);
+      wrap.insertBefore(unmuted, document.getElementById('error'));
+    } catch (err) {
+      console.warn('Failed to recreate unmuted iframe', err);
+      showError();
+    }
+  };
+
+  overlay.addEventListener('click', onFirstTap, {passive:false});
+  overlay.addEventListener('touchend', onFirstTap, {passive:false});
+
+  // fallback timeout: if iframe appears blank or blocked, show friendly error
+  setTimeout(() => {
+    try {
+      // cross-origin access will throw; if it does, we assume iframe loaded or is blocked but can't check
+      const doc = initial.contentDocument || initial.contentWindow.document;
+      if (!doc || !doc.body || doc.body.innerHTML.trim() === '') {
+        initial.style.display = 'none';
+        showError();
       }
-    }, 3000);
-  }
+    } catch (err) {
+      // cross-origin — nothing we can inspect; assume OK
+    }
+  }, 3000);
+} else {
+  showError();
+}
 </script>
 </body>
 </html>
