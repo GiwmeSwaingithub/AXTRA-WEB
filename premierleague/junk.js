@@ -1,4 +1,6 @@
- // Create iframe dynamically after page load
+   // Obfuscated URL loading
+    document.addEventListener('DOMContentLoaded', function() {
+// Create iframe dynamically after page load
       setTimeout(function() {
         const iframeContainer = document.querySelector('.iframe-container');
         const loadingIndicator = document.querySelector('.loading-indicator');
