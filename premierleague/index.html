@@ -201,6 +201,7 @@
     iframe {
       width: 100%;
       height: 100%;
+      margin: 0;
       border: none;
       pointer-events: none; /* Prevent interaction with iframe */
     }
@@ -214,6 +215,7 @@
     .desktop-container iframe {
       width: 100%;
       height: 100%;
+      margin: 0;
       border: none;
     }
 
@@ -288,13 +290,30 @@
 
   <!-- Iframe Container -->
   <div class="iframe-container">
-    <iframe src="https://streamcrichd.com/update/skys5.php"></iframe>
+    <iframe 
+      src="https://streamcrichd.com/update/skys5.php" 
+      marginheight="0" 
+      marginwidth="0" 
+      scrolling="no" 
+      frameborder="0" 
+      allowfullscreen  
+      allow="encrypted-media">
+    </iframe>
   </div>
 </div>
 
 <!-- Desktop Layout - Fullscreen iframe -->
 <div class="desktop-container">
-  <iframe src="https://streamcrichd.com/update/skys5.php" id="desktopIframe"></iframe>
+  <iframe 
+    src="https://streamcrichd.com/update/skys5.php" 
+    marginheight="0" 
+    marginwidth="0" 
+    scrolling="no" 
+    frameborder="0" 
+    allowfullscreen  
+    allow="encrypted-media"
+    id="desktopIframe">
+  </iframe>
 </div>
 
 <div class="bottom-app-bar" id="bottomAppBar">
