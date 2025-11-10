@@ -4,26 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Axtra - Premier League</title>
-  
-  <!-- Favicon -->
-  <link rel="icon" href="https://axtra.eduniapps.com/favicon.ico" type="image/x-icon">
-  
   <style>
-    html, body {
+    * {
       margin: 0;
       padding: 0;
-      height: 100%;
+      box-sizing: border-box;
+    }
+
+    body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #000;
       color: #fff;
-      overflow: hidden;
-    }
-
-    /* Mobile layout */
-    .mobile-container {
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      height: 100vh;
     }
 
     /* Premier League Header */
@@ -36,12 +30,6 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
       position: relative;
       flex-shrink: 0;
-      transition: transform 0.3s ease;
-      z-index: 10;
-    }
-
-    .premier-header.hidden {
-      transform: translateY(-100%);
     }
 
     .premier-header::after {
@@ -81,12 +69,6 @@
       background: rgba(0, 0, 0, 0.9);
       padding: 20px;
       flex-shrink: 0;
-      transition: transform 0.3s ease;
-      z-index: 10;
-    }
-
-    .instructions.hidden {
-      transform: translateY(-100%);
     }
 
     .instructions h2 {
@@ -110,19 +92,80 @@
       border-left: 3px solid #FFCC00;
     }
 
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Iframe container */
+    .iframe-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: #111;
+      margin: 0 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* News and Content Section */
+    .news-content {
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      margin: 10px 20px;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .news-section {
+      margin-bottom: 15px;
+    }
+
+    .news-section h3 {
+      color: #00FF85;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .news-item {
+      background: rgba(56, 0, 60, 0.3);
+      padding: 10px;
+      border-radius: 6px;
+      border-left: 3px solid #00FF85;
+    }
+
+    .quote-section {
+      font-style: italic;
+      padding: 10px;
+      background: rgba(0, 255, 133, 0.1);
+      border-radius: 6px;
+      border-left: 3px solid #FFCC00;
+    }
+
+    .quote-section cite {
+      display: block;
+      margin-top: 5px;
+      text-align: right;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
     /* Download Banner */
     .bottom-app-bar {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
-      padding: 8px 20px;
+      padding: 12px 20px;
       box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-      transition: transform 0.3s ease;
       flex-shrink: 0;
-    }
-
-    .bottom-app-bar.hidden {
-      transform: translateY(100%);
     }
 
     .app-bar-content {
@@ -178,100 +221,33 @@
       text-align: center;
     }
 
-    /* Iframe container */
-    .iframe-container {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .iframe-wrapper {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      pointer-events: none; /* Prevent interaction with iframe */
-    }
-
-    /* Desktop layout - fullscreen iframe */
-    .desktop-container {
-      height: 100vh;
-      position: relative;
-    }
-
-    .desktop-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    /* Fullscreen button */
-    .fullscreen-toggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 1001;
-      display: none;
-    }
-
-    /* Mobile-specific styles */
-    @media (max-width: 767px) {
-      .desktop-container {
-        display: none;
-      }
-      .mobile-container {
-        display: flex;
-      }
-    }
-
     /* Desktop-specific styles */
     @media (min-width: 768px) {
-      .mobile-container {
+      .instructions {
         display: none;
       }
-      .desktop-container {
-        display: block;
+      
+      .iframe-container {
+        margin: 20px;
       }
-      .fullscreen-toggle {
-        display: block;
-      }
-      .instructions {
-        display: none; /* Hide instructions on desktop */
+      
+      .news-content {
+        margin: 0 20px 20px;
       }
     }
   </style>
 </head>
 <body>
-
-<!-- Fullscreen Toggle Button (Desktop Only) -->
-<button class="fullscreen-toggle" id="fullscreenToggle">Enter Fullscreen</button>
-
-<!-- Mobile Layout -->
-<div class="mobile-container">
   <!-- Premier League Header -->
-  <div class="premier-header" id="premierHeader">
+  <div class="premier-header">
     <div class="header-left">
       <div class="logo">AXTRA</div>
       <div class="premier-badge">PREMIER LEAGUE</div>
     </div>
   </div>
 
-  <!-- Instructions Section (Hidden on Desktop) -->
-  <div class="instructions" id="instructions">
+  <!-- Instructions Section -->
+  <div class="instructions">
     <h2>Desktop Mode Required</h2>
     <p>To continue watching, please:</p>
     <p>• Enable <strong>Desktop Site</strong> in your mobile browser settings</p>
@@ -282,14 +258,15 @@
     </div>
   </div>
 
-  <!-- Iframe Container -->
-  <div class="iframe-container">
-    <div class="iframe-wrapper">
+  <!-- Content Area -->
+  <div class="content-area">
+    <!-- Iframe Container -->
+    <div class="iframe-container">
       <iframe src="https://streamcrichd.com/update/skys5.php"></iframe>
     </div>
-    
-    <!-- Content Section -->
-    <div class="content-section">
+
+    <!-- News and Content Section -->
+    <div class="news-content">
       <div class="news-section">
         <h3>My favorite news: 17:50 pm</h3>
         <div class="news-item">
@@ -307,7 +284,7 @@
   </div>
 
   <!-- Download Banner -->
-  <div class="bottom-app-bar" id="bottomAppBar">
+  <div class="bottom-app-bar">
     <div class="app-bar-content">
       <div class="app-bar-info">
         <div class="app-icon">A</div>
@@ -317,87 +294,15 @@
     </div>
     <div class="app-description">Faster downloads, no ads, offline mode</div>
   </div>
-</div>
 
-<!-- Desktop Layout - Fullscreen iframe -->
-<div class="desktop-container">
-  <iframe src="https://streamcrichd.com/update/skys5.php" id="desktopIframe"></iframe>
-</div>
-
-<script>
-  // Elements to hide/show
-  const premierHeader = document.getElementById('premierHeader');
-  const instructions = document.getElementById('instructions');
-  const bottomAppBar = document.getElementById('bottomAppBar');
-  const fullscreenToggle = document.getElementById('fullscreenToggle');
-  const desktopIframe = document.getElementById('desktopIframe');
-  
-  // Function to toggle fullscreen
-  function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      // Enter fullscreen
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) {
-        document.documentElement.msRequestFullscreen();
-      }
-    } else {
-      // Exit fullscreen
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      }
-    }
-  }
-  
-  // Function to handle fullscreen change
-  function handleFullscreenChange() {
-    if (document.fullscreenElement) {
-      // In fullscreen mode
-      premierHeader.classList.add('hidden');
-      instructions.classList.add('hidden');
-      bottomAppBar.classList.add('hidden');
-      fullscreenToggle.textContent = 'Exit Fullscreen';
-      
-      // Enable pointer events on iframe in fullscreen
-      if (desktopIframe) {
-        desktopIframe.style.pointerEvents = 'auto';
-      }
-    } else {
-      // Not in fullscreen mode
-      premierHeader.classList.remove('hidden');
-      instructions.classList.remove('hidden');
-      bottomAppBar.classList.remove('hidden');
-      fullscreenToggle.textContent = 'Enter Fullscreen';
-      
-      // Disable pointer events on iframe when not in fullscreen
-      if (desktopIframe) {
-        desktopIframe.style.pointerEvents = 'none';
-      }
-    }
-  }
-  
-  // Event listeners
-  fullscreenToggle.addEventListener('click', toggleFullscreen);
-  
-  // Listen for fullscreen changes
-  document.addEventListener('fullscreenchange', handleFullscreenChange);
-  document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-  document.addEventListener('msfullscreenchange', handleFullscreenChange);
-  
-  // Add functionality to download button
-  document.querySelector('.app-download-btn').addEventListener('click', function(e) {
-    e.preventDefault();
-    alert('Redirecting to app download...');
-    // In a real implementation, you would redirect to your app store URL
-    // window.location.href = 'https://your-app-store-link.com';
-  });
-</script>
-
+  <script>
+    // Add functionality to download button
+    document.querySelector('.app-download-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('Redirecting to app download...');
+      // In a real implementation, you would redirect to your app store URL
+      // window.location.href = 'https://your-app-store-link.com';
+    });
+  </script>
 </body>
 </html>
