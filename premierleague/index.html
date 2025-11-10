@@ -1,89 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Premier League</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Premier League — Embedded</title>
 <style>
-  html, body {
-    margin: 0;
-    height: 100%;
-    overflow: hidden;
-    background: #000;
-    color: #fff;
-    font-family: sans-serif;
-  }
-  iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-  }
-  #error {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    padding: 20px;
-    background: rgba(0,0,0,0.8);
-    border-radius: 10px;
-  }
+  html,body{margin:0;height:100%;background:#000;color:#fff;font-family:system-ui,Segoe UI,Roboto,Arial}
+  #frame-wrap{width:100%;height:100%;position:relative}
+  iframe{width:100%;height:100%;border:0;display:block}
+  #error{display:none;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);padding:20px;text-align:center}
 </style>
-<script>
-  // Force desktop user agent
-  Object.defineProperty(navigator, "userAgent", {
-    get: () => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.7204.243 Safari/537.36"
-  });
-
-  // Inherit parent head
-  fetch("https://axtra.eduniapps.com/")
-    .then(res => res.text())
-    .then(html => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const parentHead = doc.head.cloneNode(true);
-      parentHead.querySelectorAll("title").forEach(t => t.remove());
-      document.head.append(...parentHead.children);
-    })
-    .catch(err => console.warn("Failed to inherit parent head:", err));
-
-  window.addEventListener("DOMContentLoaded", () => {
-    const iframe = document.querySelector("iframe");
-    const errorDiv = document.getElementById("error");
-
-    // Detect iframe load error (403 or blocked)
-    iframe.addEventListener("error", () => {
-      iframe.style.display = "none";
-      errorDiv.style.display = "block";
-    });
-
-    // Timeout fallback in case error event doesn't trigger
-    setTimeout(() => {
-      try {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!iframeDoc || iframeDoc.body.innerHTML.trim() === "") {
-          iframe.style.display = "none";
-          errorDiv.style.display = "block";
-        }
-      } catch {
-        iframe.style.display = "none";
-        errorDiv.style.display = "block";
-      }
-    }, 3000);
-  });
-</script>
 </head>
 <body>
-<iframe
-  src="https://streamcrichd.com/update/skys5.php"
-  allow="autoplay; fullscreen; picture-in-picture"
-  allowfullscreen
-></iframe>
+  <div id="frame-wrap" aria-live="polite"></div>
+  <div id="error" role="alert">⚠️ Access blocked or failed to load. Try desktop mode.</div>
 
-<div id="error">
-  ⚠️ Access blocked (403). Please switch to <b>desktop mode</b> in your browser.
-</div>
+<script>
+  // --- small obfuscation: base64 split into chunks to avoid obvious string in source ---
+  const encodedParts = [
+    "aHR0cHM6Ly9zdHJlYW1jcmljaGQuY29t",
+    "L3VwZGF0ZS9za3lzNS5waHA="
+  ];
+  // join parts, decode
+  const encoded = encodedParts.join('');
+  let url;
+  try {
+    url = atob(encoded);
+  } catch (e) {
+    console.error('Decoding failed', e);
+    document.getElementById('error').style.display = 'block';
+  }
+
+  // create iframe dynamically (so src isn't visible in static HTML)
+  if (url) {
+    const wrap = document.getElementById('frame-wrap');
+    const iframe = document.createElement('iframe');
+
+    // set attributes
+    iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.src = url;
+
+    // desktop UA hint (note: browsers generally ignore changing navigator.userAgent; we rely on dynamic load)
+    // fallback/error handling
+    iframe.addEventListener('error', () => {
+      iframe.style.display = 'none';
+      document.getElementById('error').style.display = 'block';
+    });
+
+    // append to DOM
+    wrap.appendChild(iframe);
+
+    // timeout fallback: sometimes cross-origin blocks hide errors, so check for empty doc
+    setTimeout(() => {
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!doc || !doc.body || doc.body.innerHTML.trim() === '') {
+          iframe.style.display = 'none';
+          document.getElementById('error').style.display = 'block';
+        }
+      } catch (err) {
+        // likely cross-origin — we can't inspect, so assume ok; if blocked, user sees blank -> error shown earlier on 'error' or user will switch to desktop mode
+      }
+    }, 3000);
+  }
+</script>
 </body>
 </html>
