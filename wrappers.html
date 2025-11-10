@@ -1,58 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Desktop Wrapper</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Embed Stream</title>
 <style>
   html, body {
     margin: 0;
     height: 100%;
-    overflow: hidden;
     background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-family: sans-serif;
   }
   iframe {
     width: 100%;
     height: 100%;
     border: none;
+    display: block;
+  }
+  #error {
+    text-align: center;
+    padding: 20px;
   }
 </style>
-<script>
-  // Force desktop user agent
-  Object.defineProperty(navigator, "userAgent", {
-    get: () =>
-      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.7204.243 Safari/537.36"
-  });
-
-  // Inject missing aclib.js
-  function injectAClib(iframe) {
-    const doc = iframe.contentWindow.document;
-    const script = doc.createElement("script");
-    script.src = "https://profamouslife.com/assets/js/aclib.js"; // exact CDN path
-    script.type = "text/javascript";
-    script.onload = () => console.log("aclib.js injected");
-    doc.head.appendChild(script);
-  }
-
-  window.addEventListener("DOMContentLoaded", () => {
-    const iframe = document.querySelector("iframe");
-
-    // Wait for iframe to load its content
-    iframe.onload = () => {
-      try {
-        injectAClib(iframe);
-      } catch (e) {
-        console.warn("Cannot inject aclib.js due to cross-origin restrictions:", e);
-      }
-    };
-  });
-</script>
 </head>
 <body>
-<iframe
-  src="https://streamcrichd.com/update/skys5.php"
+
+<iframe id="stream" src="https://streamcrichd.com/update/skys5.php"
   allow="autoplay; fullscreen; picture-in-picture"
   allowfullscreen
 ></iframe>
+
+<div id="error" style="display:none;">
+  ⚠️ Access blocked (403). Please switch to <b>desktop mode</b> in your browser.
+</div>
+
+<script>
+  const iframe = document.getElementById("stream");
+  const errorDiv = document.getElementById("error");
+
+  // Detect if iframe failed to load (common with 403)
+  iframe.addEventListener("error", () => {
+    iframe.style.display = "none";
+    errorDiv.style.display = "block";
+  });
+
+  // Optional: timeout fallback if error event doesn't trigger
+  setTimeout(() => {
+    try {
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+      if (!iframeDoc || iframeDoc.body.innerHTML.trim() === "") {
+        iframe.style.display = "none";
+        errorDiv.style.display = "block";
+      }
+    } catch (e) {
+      iframe.style.display = "none";
+      errorDiv.style.display = "block";
+    }
+  }, 3000);
+</script>
+
 </body>
 </html>
