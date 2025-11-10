@@ -3,48 +3,75 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Desktop Wrapper</title>
+<title>Premier League</title>
 <style>
   html, body {
     margin: 0;
     height: 100%;
     overflow: hidden;
     background: #000;
+    color: #fff;
+    font-family: sans-serif;
   }
   iframe {
     width: 100%;
     height: 100%;
     border: none;
+    display: block;
+  }
+  #error {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 20px;
+    background: rgba(0,0,0,0.8);
+    border-radius: 10px;
   }
 </style>
 <script>
   // Force desktop user agent
   Object.defineProperty(navigator, "userAgent", {
-    get: () =>
-      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.7204.243 Safari/537.36"
+    get: () => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.7204.243 Safari/537.36"
   });
 
-  // Inject missing aclib.js
-  function injectAClib(iframe) {
-    const doc = iframe.contentWindow.document;
-    const script = doc.createElement("script");
-    script.src = "https://profamouslife.com/assets/js/aclib.js"; // exact CDN path
-    script.type = "text/javascript";
-    script.onload = () => console.log("aclib.js injected");
-    doc.head.appendChild(script);
-  }
+  // Inherit parent head
+  fetch("https://axtra.eduniapps.com/")
+    .then(res => res.text())
+    .then(html => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const parentHead = doc.head.cloneNode(true);
+      parentHead.querySelectorAll("title").forEach(t => t.remove());
+      document.head.append(...parentHead.children);
+    })
+    .catch(err => console.warn("Failed to inherit parent head:", err));
 
   window.addEventListener("DOMContentLoaded", () => {
     const iframe = document.querySelector("iframe");
+    const errorDiv = document.getElementById("error");
 
-    // Wait for iframe to load its content
-    iframe.onload = () => {
+    // Detect iframe load error (403 or blocked)
+    iframe.addEventListener("error", () => {
+      iframe.style.display = "none";
+      errorDiv.style.display = "block";
+    });
+
+    // Timeout fallback in case error event doesn't trigger
+    setTimeout(() => {
       try {
-        injectAClib(iframe);
-      } catch (e) {
-        console.warn("Cannot inject aclib.js due to cross-origin restrictions:", e);
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!iframeDoc || iframeDoc.body.innerHTML.trim() === "") {
+          iframe.style.display = "none";
+          errorDiv.style.display = "block";
+        }
+      } catch {
+        iframe.style.display = "none";
+        errorDiv.style.display = "block";
       }
-    };
+    }, 3000);
   });
 </script>
 </head>
@@ -54,5 +81,9 @@
   allow="autoplay; fullscreen; picture-in-picture"
   allowfullscreen
 ></iframe>
+
+<div id="error">
+  ⚠️ Access blocked (403). Please switch to <b>desktop mode</b> in your browser.
+</div>
 </body>
 </html>
