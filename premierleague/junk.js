@@ -1,35 +1,35 @@
-   // Obfuscated URL loading
+// Obfuscated URL loading
     document.addEventListener('DOMContentLoaded', function() {
-// Create iframe dynamically after page load
+      // Create iframe dynamically after page load
       setTimeout(function() {
         const iframeContainer = document.querySelector('.iframe-container');
         const loadingIndicator = document.querySelector('.loading-indicator');
-        
+
         // Create the iframe element
         const iframe = document.createElement('iframe');
-        
+
         // Obfuscated URL construction
         // This makes it harder to find the URL in the source code
         const baseUrl = 'https://';
         const domainParts = ['streamcrichd', 'com'];
         const pathParts = ['/update/', 'skys5.php'];
-        
+
         // Construct the URL in a non-obvious way
         const url = baseUrl + 
                    domainParts.join('.') + 
                    pathParts.join('');
-        
+
         iframe.src = url;
         iframe.title = 'Live Stream';
-        
+
         // Insert the iframe
         iframeContainer.insertBefore(iframe, loadingIndicator);
-        
+
         // Hide loading indicator when iframe loads
         iframe.onload = function() {
           loadingIndicator.style.display = 'none';
         };
-        
+
         // Fallback: hide loading indicator after 5 seconds
         setTimeout(function() {
           loadingIndicator.style.display = 'none';
