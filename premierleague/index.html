@@ -1,181 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Premier League — Embedded</title>
-<style>
-  :root{--bg:#000;--ui:#fff}
-  html,body{
-    margin:0;
-    height:100%;
-    background:var(--bg);
-    color:var(--ui);
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  }
-  #frame-wrap{
-    width:100%;
-    height:100%;
-    position:relative;
-    overflow:hidden;
-  }
-  iframe{
-    width:100%;
-    height:100%;
-    border:0;
-    display:block;
-    background:#000;
-  }
-  /* full-screen overlay to block interaction until user taps */
-  #tap-overlay{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100vw;
-    height:100vh;
-    background:transparent;
-    cursor:pointer;
-    touch-action:manipulation;
-    z-index:9999;
-  }
-  /* small visible unmute hint */
-  #unmute-hint{
-    position:absolute;
-    right:12px;
-    top:12px;
-    padding:8px 10px;
-    border-radius:8px;
-    background:rgba(0,0,0,0.5);
-    color:var(--ui);
-    font-size:13px;
-    backdrop-filter:blur(4px);
-    z-index:10000;
-    display:flex;
-    gap:8px;
-    align-items:center;
-    pointer-events:auto;
-  }
-  #error{
-    display:none;
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:rgba(0,0,0,0.75);
-    padding:20px;
-    text-align:center;
-    z-index:10001;
-  }
-  button.icon-btn{
-    background:transparent;
-    border:0;
-    color:var(--ui);
-    font-size:14px;
-    padding:6px;
-    cursor:pointer;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Axtra - Desktop Mode Required</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #000;
+      color: #fff;
+    }
+
+    /* Mobile layout */
+    .mobile-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* Premier League Header */
+    .premier-header {
+      background: linear-gradient(135deg, #38003C 0%, #00FF85 100%);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .premier-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #38003C, #00FF85, #38003C);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: white;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .premier-badge {
+      background: #00FF85;
+      color: #38003C;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    /* Instructions Section */
+    .instructions {
+      background: rgba(0, 0, 0, 0.9);
+      padding: 20px;
+      flex-shrink: 0;
+    }
+
+    .instructions h2 {
+      margin-top: 0;
+      color: #00FF85;
+      font-size: 1.2rem;
+    }
+
+    .instructions p {
+      margin: 10px 0;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    .audio-note {
+      color: #FFCC00;
+      font-weight: bold;
+      margin-top: 15px;
+      padding: 8px;
+      background: rgba(255, 204, 0, 0.1);
+      border-left: 3px solid #FFCC00;
+    }
+
+    /* Download Banner */
+/* Bottom App Bar - Ultra Slim */
+        .bottom-app-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px; /* Ultra slim padding */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .app-bar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px; /* Small space for description */
+        }
+
+        .app-bar-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-icon {
+            width: 32px; /* Smaller icon */
+            height: 32px; /* Smaller icon */
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px; /* Smaller font */
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .app-name {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .app-download-btn {
+            background: white;
+            color: #667eea;
+            padding: 6px 16px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: transform 0.2s;
+        }
+
+        .app-download-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .app-description {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+    /* Iframe container */
+    .iframe-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      pointer-events: none; /* Prevent interaction with iframe */
+    }
+
+    /* Desktop layout - fullscreen iframe */
+    .desktop-container {
+      height: 100vh;
+    }
+
+    .desktop-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 767px) {
+      .desktop-container {
+        display: none;
+      }
+      .mobile-container {
+        display: flex;
+      }
+    }
+
+    /* Desktop-specific styles */
+    @media (min-width: 768px) {
+      .mobile-container {
+        display: none;
+      }
+      .desktop-container {
+        display: block;
+      }
+    }
+  </style>
 </head>
 <body>
-<div id="frame-wrap" aria-live="polite"></div>
-<div id="error">Failed to load stream.</div>
+
+<!-- Mobile Layout -->
+<div class="mobile-container">
+  <!-- Premier League Header -->
+  <div class="premier-header">
+    <div class="header-left">
+      <div class="logo">AXTRA</div>
+      <div class="premier-badge">PREMIER LEAGUE</div>
+    </div>
+  </div>
+
+  <!-- Instructions Section -->
+  <div class="instructions">
+    <h2>Desktop Mode Required</h2>
+    <p>To continue watching, please:</p>
+    <p>• Enable <strong>Desktop Site</strong> in your mobile browser settings</p>
+    <p>• Or open this page on a computer/laptop</p>
+    
+    <div class="audio-note">
+      🔊 Audio is only available on computer/laptop
+    </div>
+  </div>
+
+  <!-- Iframe Container -->
+  <div class="iframe-container">
+    <iframe src="https://streamcrichd.com/update/skys5.php"></iframe>
+  </div>
+</div>
+
+<!-- Desktop Layout - Fullscreen iframe -->
+<div class="desktop-container">
+  <iframe src="https://streamcrichd.com/update/skys5.php"></iframe>
+</div>
+<div class="bottom-app-bar">
+        <div class="app-bar-content">
+            <div class="app-bar-info">
+                <div class="app-icon">A</div>
+                <div class="app-name">AXTRA</div>
+            </div>
+            <a href="#" class="app-download-btn">Download App</a>
+        </div>
+        <div class="app-description">Faster downloads, no ads, offline mode</div>
+    </div>
 
 <script>
-const encodedParts = [
-  "aHR0cHM6Ly9zdHJlYW1jcmljaGQuY29t",
-  "L3VwZGF0ZS9za3lzNS5waHA="
-];
-const encoded = encodedParts.join('');
-let streamUrl;
-try {
-  streamUrl = atob(encoded);
-} catch (e) {
-  console.error('Decoding failed', e);
-  showError();
-}
-
-const wrap = document.getElementById('frame-wrap');
-
-function showError(){
-  document.getElementById('error').style.display = 'flex';
-}
-
-// create initial muted iframe for autoplay
-function createInitialIframe(){
-  const iframe = document.createElement('iframe');
-  iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
-  iframe.setAttribute('allowfullscreen', '');
-  iframe.setAttribute('playsinline', '');
-  iframe.setAttribute('muted', '');
-  iframe.src = streamUrl;
-  iframe.addEventListener('error', () => {
-    iframe.style.display = 'none';
-    showError();
+  // Add functionality to download button
+  document.querySelector('.download-btn').addEventListener('click', function() {
+    alert('Redirecting to app download...');
+    // In a real implementation, you would redirect to your app store URL
+    // window.location.href = 'https://your-app-store-link.com';
   });
-  return iframe;
-}
-
-// create unmuted iframe after user gesture
-function createUnmutedIframe(){
-  const iframe = document.createElement('iframe');
-  iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
-  iframe.setAttribute('allowfullscreen', '');
-  iframe.setAttribute('playsinline', '');
-  const sep = streamUrl.includes('?') ? '&' : '?';
-  iframe.src = streamUrl + sep + '_=' + Date.now();
-  iframe.addEventListener('error', () => {
-    iframe.style.display = 'none';
-    showError();
-  });
-  return iframe;
-}
-
-if(streamUrl){
-  const initial = createInitialIframe();
-  wrap.appendChild(initial);
-
-  // overlay to block interaction
-  const overlay = document.createElement('div');
-  overlay.id = 'tap-overlay';
-  overlay.title = 'Tap to enable audio';
-
-  // visible hint
-  const hint = document.createElement('div');
-  hint.id = 'unmute-hint';
-  hint.innerHTML = '<span style="font-weight:600;font-size:13px">Tap to unmute</span>';
-
-  document.body.appendChild(overlay);
-  document.body.appendChild(hint);
-
-  const onFirstTap = (ev) => {
-    ev.preventDefault();
-    overlay.removeEventListener('click', onFirstTap);
-    overlay.removeEventListener('touchend', onFirstTap);
-    overlay.remove();
-    hint.remove();
-
-    const unmuted = createUnmutedIframe();
-    if(initial && initial.parentNode) initial.parentNode.removeChild(initial);
-    wrap.appendChild(unmuted);
-  };
-
-  overlay.addEventListener('click', onFirstTap, {passive:false});
-  overlay.addEventListener('touchend', onFirstTap, {passive:false});
-
-  // fallback: check if iframe loaded
-  setTimeout(()=>{
-    try{
-      const doc = initial.contentDocument || initial.contentWindow.document;
-      if(!doc || !doc.body || doc.body.innerHTML.trim()===''){
-        initial.style.display='none';
-        showError();
-      }
-    }catch(err){}
-  },3000);
-}else{
-  showError();
-}
 </script>
+
 </body>
 </html>
