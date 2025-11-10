@@ -20,6 +20,27 @@
       flex-direction: column;
     }
 
+    /* Betting Promotion Banner */
+    .betting-promo {
+      background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+      color: #000;
+      padding: 12px 20px;
+      text-align: center;
+      font-weight: bold;
+      flex-shrink: 0;
+      box-shadow: 0 2px 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .betting-promo a {
+      color: #38003C;
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    .betting-promo a:hover {
+      text-decoration: underline;
+    }
+
     /* Premier League Header */
     .premier-header {
       background: linear-gradient(135deg, #38003C 0%, #00FF85 100%);
@@ -63,6 +84,39 @@
       border-radius: 20px;
       font-size: 0.8rem;
       font-weight: bold;
+    }
+
+    /* Navigation Buttons */
+    .navigation-buttons {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      justify-content: center;
+    }
+
+    .nav-btn {
+      background: linear-gradient(135deg, #38003C 0%, #00FF85 100%);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      flex: 1;
+      max-width: 150px;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 
     /* Instructions Section - Mobile Only */
@@ -139,48 +193,6 @@
 
     .fullscreen-btn:hover {
       background: rgba(0, 0, 0, 0.9);
-    }
-
-    /* News and Content Section */
-    .news-content {
-      padding: 15px 20px;
-      background: rgba(255, 255, 255, 0.05);
-      margin: 0;
-      border-radius: 0;
-      flex-shrink: 0;
-    }
-
-    .news-section {
-      margin-bottom: 15px;
-    }
-
-    .news-section h3 {
-      color: #00FF85;
-      margin-bottom: 8px;
-      font-size: 1rem;
-    }
-
-    .news-item {
-      background: rgba(56, 0, 60, 0.3);
-      padding: 10px;
-      border-radius: 6px;
-      border-left: 3px solid #00FF85;
-    }
-
-    .quote-section {
-      font-style: italic;
-      padding: 10px;
-      background: rgba(0, 255, 133, 0.1);
-      border-radius: 6px;
-      border-left: 3px solid #FFCC00;
-    }
-
-    .quote-section cite {
-      display: block;
-      margin-top: 5px;
-      text-align: right;
-      font-size: 0.9rem;
-      color: #aaa;
     }
 
     /* Download Banner */
@@ -261,6 +273,15 @@
         margin: 0;
         border-radius: 0;
       }
+      
+      .navigation-buttons {
+        flex-wrap: wrap;
+      }
+      
+      .nav-btn {
+        flex: 1 0 calc(50% - 10px);
+        max-width: none;
+      }
     }
 
     /* Desktop-specific styles */
@@ -269,16 +290,19 @@
         padding: 15px 30px;
       }
       
+      .betting-promo {
+        padding: 12px 30px;
+      }
+      
+      .navigation-buttons {
+        padding: 15px 30px;
+      }
+      
       .iframe-container {
         margin: 20px;
         border-radius: 8px;
       }
-      
-      .news-content {
-        margin: 0 20px 20px;
-        border-radius: 8px;
-      }
-      
+            
       .bottom-app-bar {
         margin: 0 20px 20px;
         border-radius: 8px;
@@ -292,7 +316,8 @@
     
     body.fullscreen .premier-header,
     body.fullscreen .instructions,
-    body.fullscreen .news-content,
+        body.fullscreen .betting-promo,
+    body.fullscreen .navigation-buttons,
     body.fullscreen .bottom-app-bar {
       display: none;
     }
@@ -341,24 +366,17 @@
       </button>
     </div>
 
-    <!-- News and Content Section -->
-    <div class="news-content">
-      <div class="news-section">
-        <h3>My favorite news: 17:50 pm</h3>
-        <div class="news-item">
-          <strong>Premium Leagues:</strong> Liverpool have contracted PGMOL to raise concerns over Virgil war.
-        </div>
-      </div>
-      
-      <div class="quote-section">
-        <blockquote>
-          "The team has a good idea. We had energy. We lost energy last season. I don't know why"
-        </blockquote>
-        <cite>- Granddale</cite>
-      </div>
-    </div>
   </div>
-
+    <!-- Betting Promotion Banner -->
+  <div class="betting-promo">
+    BET NOW using our <a href="https://chachisha.game/?ref=7028E4">special link</a> to get 100 stake refund, 100 times bonus, free bets!
+  </div>
+<!-- Navigation Buttons -->
+  <div class="navigation-buttons">
+    <a href="https://supersport.com/en-KE/football/premier-league/fixtures" class="nav-btn">Fixtures</a>
+    <a href="https://supersport.com/en-KE/football/premier-league/logs" class="nav-btn">Table</a>
+    <a href="https://supersport.com/en-KE/football/premier-league/results" class="nav-btn">Live Scores</a>
+  </div>
   <!-- Download Banner -->
   <div class="bottom-app-bar">
     <div class="app-bar-content">
