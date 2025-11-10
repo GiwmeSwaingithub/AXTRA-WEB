@@ -3,8 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Axtra - Desktop Mode Required</title>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <title>Axtra - Premier League</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="https://axtra.eduniapps.com/favicon.ico" type="image/x-icon">
+  
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID');
+  </script>
+  
   <style>
     html, body {
       margin: 0;
@@ -13,6 +25,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #000;
       color: #fff;
+      overflow: hidden;
     }
 
     /* Mobile layout */
@@ -33,6 +46,7 @@
       position: relative;
       flex-shrink: 0;
       transition: transform 0.3s ease;
+      z-index: 10;
     }
 
     .premier-header.hidden {
@@ -77,6 +91,7 @@
       padding: 20px;
       flex-shrink: 0;
       transition: transform 0.3s ease;
+      z-index: 10;
     }
 
     .instructions.hidden {
@@ -162,6 +177,7 @@
       font-weight: 600;
       font-size: 0.85rem;
       transition: transform 0.2s;
+      cursor: pointer;
     }
 
     .app-download-btn:hover {
@@ -179,6 +195,7 @@
       flex: 1;
       position: relative;
       overflow: hidden;
+      z-index: 1;
     }
 
     iframe {
@@ -191,6 +208,7 @@
     /* Desktop layout - fullscreen iframe */
     .desktop-container {
       height: 100vh;
+      position: relative;
     }
 
     .desktop-container iframe {
@@ -235,6 +253,9 @@
       .fullscreen-toggle {
         display: block;
       }
+      .instructions {
+        display: none; /* Hide instructions on desktop */
+      }
     }
   </style>
 </head>
@@ -253,7 +274,7 @@
     </div>
   </div>
 
-  <!-- Instructions Section -->
+  <!-- Instructions Section (Hidden on Desktop) -->
   <div class="instructions" id="instructions">
     <h2>Desktop Mode Required</h2>
     <p>To continue watching, please:</p>
