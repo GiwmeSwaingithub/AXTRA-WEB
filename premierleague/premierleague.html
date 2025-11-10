@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Desktop Wrapper</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+  }
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+</style>
+<script>
+  // Force desktop user agent
+  Object.defineProperty(navigator, "userAgent", {
+    get: () =>
+      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.7204.243 Safari/537.36"
+  });
+
+  // Inject missing aclib.js
+  function injectAClib(iframe) {
+    const doc = iframe.contentWindow.document;
+    const script = doc.createElement("script");
+    script.src = "https://profamouslife.com/assets/js/aclib.js"; // exact CDN path
+    script.type = "text/javascript";
+    script.onload = () => console.log("aclib.js injected");
+    doc.head.appendChild(script);
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const iframe = document.querySelector("iframe");
+
+    // Wait for iframe to load its content
+    iframe.onload = () => {
+      try {
+        injectAClib(iframe);
+      } catch (e) {
+        console.warn("Cannot inject aclib.js due to cross-origin restrictions:", e);
+      }
+    };
+  });
+</script>
+</head>
+<body>
+<iframe
+  src="https://streamcrichd.com/update/skys5.php"
+  allow="autoplay; fullscreen; picture-in-picture"
+  allowfullscreen
+></iframe>
+</body>
+</html>
