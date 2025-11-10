@@ -15,7 +15,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #000;
       color: #fff;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
@@ -92,6 +92,17 @@
       border-left: 3px solid #FFCC00;
     }
 
+    /* Main Content Container */
+    .main-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 20px;
+    }
+
     /* Content Area */
     .content-area {
       flex: 1;
@@ -106,9 +117,10 @@
       position: relative;
       overflow: hidden;
       background: #111;
-      margin: 0 20px;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      max-height: 60vh;
+      min-height: 400px;
     }
 
     iframe {
@@ -119,9 +131,9 @@
 
     /* News and Content Section */
     .news-content {
-      padding: 15px 20px;
+      padding: 15px;
       background: rgba(255, 255, 255, 0.05);
-      margin: 10px 20px;
+      margin-top: 20px;
       border-radius: 8px;
       flex-shrink: 0;
     }
@@ -173,6 +185,8 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 4px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     .app-bar-info {
@@ -219,6 +233,8 @@
       font-size: 0.75rem;
       opacity: 0.9;
       text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     /* Desktop-specific styles */
@@ -227,12 +243,24 @@
         display: none;
       }
       
-      .iframe-container {
-        margin: 20px;
+      .main-container {
+        padding: 20px;
       }
       
-      .news-content {
-        margin: 0 20px 20px;
+      .iframe-container {
+        max-height: 60vh;
+      }
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 767px) {
+      .main-container {
+        padding: 10px;
+      }
+      
+      .iframe-container {
+        max-height: 50vh;
+        min-height: 300px;
       }
     }
   </style>
@@ -246,7 +274,7 @@
     </div>
   </div>
 
-  <!-- Instructions Section -->
+  <!-- Instructions Section (Hidden on Desktop) -->
   <div class="instructions">
     <h2>Desktop Mode Required</h2>
     <p>To continue watching, please:</p>
@@ -258,27 +286,30 @@
     </div>
   </div>
 
-  <!-- Content Area -->
-  <div class="content-area">
-    <!-- Iframe Container -->
-    <div class="iframe-container">
-      <iframe src="https://streamcrichd.com/update/skys5.php"></iframe>
-    </div>
-
-    <!-- News and Content Section -->
-    <div class="news-content">
-      <div class="news-section">
-        <h3>My favorite news: 17:50 pm</h3>
-        <div class="news-item">
-          <strong>Premium Leagues:</strong> Liverpool have contracted PGMOL to raise concerns over Virgil war.
-        </div>
+  <!-- Main Content Container -->
+  <div class="main-container">
+    <!-- Content Area -->
+    <div class="content-area">
+      <!-- Iframe Container -->
+      <div class="iframe-container">
+        <iframe src="https://streamcrichd.com/update/skys5.php"></iframe>
       </div>
-      
-      <div class="quote-section">
-        <blockquote>
-          "The team has a good idea. We had energy. We lost energy last season. I don't know why"
-        </blockquote>
-        <cite>- Granddale</cite>
+
+      <!-- News and Content Section -->
+      <div class="news-content">
+        <div class="news-section">
+          <h3>My favorite news: 17:50 pm</h3>
+          <div class="news-item">
+            <strong>Premium Leagues:</strong> Liverpool have contracted PGMOL to raise concerns over Virgil war.
+          </div>
+        </div>
+        
+        <div class="quote-section">
+          <blockquote>
+            "The team has a good idea. We had energy. We lost energy last season. I don't know why"
+          </blockquote>
+          <cite>- Granddale</cite>
+        </div>
       </div>
     </div>
   </div>
