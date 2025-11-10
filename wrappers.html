@@ -1,26 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wrapper</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Desktop Stream Wrapper</title>
 <style>
   html, body {
     margin: 0;
     height: 100%;
     overflow: hidden;
+    background: #000;
   }
   iframe {
-    border: none;
     width: 100%;
     height: 100%;
+    border: none;
   }
 </style>
+<script>
+  // Force desktop UA before iframe load (for WebView context)
+  (function() {
+    // Override the user agent if the browser allows
+    Object.defineProperty(navigator, 'userAgent', {
+      get: () =>
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36",
+    });
+  })();
+</script>
 </head>
 <body>
-  <iframe 
-    src="https://streamcrichd.com/update/skys5.php" 
-    allow="autoplay; fullscreen"
+  <iframe
+    id="playerFrame"
+    src="https://profamouslife.com/premium.php?player=desktop&live=skysprem"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
   ></iframe>
+
+  <script>
+    // Reload with desktop mode if it ever loads mobile content
+    const iframe = document.getElementById("playerFrame");
+    iframe.onload = () => {
+      try {
+        const current = iframe.contentWindow.location.href;
+        if (current.includes("player=mobile")) {
+          iframe.src = current.replace("player=mobile", "player=desktop");
+        }
+      } catch (e) {
+        // Cross-origin protection — ignore silently
+      }
+    };
+  </script>
 </body>
 </html>
