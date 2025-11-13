@@ -1,27 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DKUT Resource Centre - Live Counter jjjj</title>
-<style>
-  body { font-family: Arial, sans-serif; padding: 20px; background: #f2f2f2; }
-  #counter { font-weight: bold; color: #0f0; font-size: 18px; margin-bottom: 20px; }
-  .school-list { margin-top: 20px; }
-  .school { padding: 10px; margin-bottom: 5px; background: #fff; border-radius: 5px; }
-</style>
-</head>
-<body>
 
-<h1>DKUT Resource Centre</h1>
-<div id="counter">👥 Active Users on this page: <span id="online-count">0</span></div>
-
-<div class="school-list">
-  <div class="school">⚙️ School of Engineering</div>
-  <div class="school">💼 School of Business Management and Economics</div>
-</div>
-
-<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getFirestore, collection, doc, setDoc, deleteDoc, serverTimestamp, onSnapshot, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
@@ -95,8 +72,4 @@
         deleteDoc(docSnap.ref).catch(()=>{});
       }
     });
-  }, 30000); // every 30s
-</script>
-
-</body>
-</html>
+  }, 30000);
