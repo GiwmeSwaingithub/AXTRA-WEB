@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeonStream — Futuristic Live Streaming Platform</title>
+  <meta name="description" content="Professional live streaming hub: sports, news, gaming, music, tech and more.">
+  <style>
+    :root {
+      --bg: #05060b;
+      --card: #0b0f16;
+      --glass: rgba(255, 255, 255, 0.04);
+      --accent1: linear-gradient(135deg, #00d4ff 0%, #7c4dff 100%);
+      --accent2: linear-gradient(135deg, #00ffa1 0%, #00d4ff 100%);
+      --accent3: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+      --muted: #9aa4b2;
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --max-width: 1400px;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      height: 100%;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(124, 77, 255, 0.07), transparent 5%), 
+                  radial-gradient(1000px 500px at 90% 90%, rgba(0, 212, 255, 0.03), transparent 5%), 
+                  var(--bg);
+      color: #e6eef8;
+      overflow-x: hidden;
+    }
+    
+    .wrap {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    
+    .branding {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: var(--accent1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 24px rgba(124, 77, 255, 0.12);
+      font-weight: 700;
+      color: white;
+    }
+    
+    .title {
+      line-height: 1;
+    }
+    
+    .title h1 {
+      font-size: 24px;
+      margin: 0;
+      background: var(--accent1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .title p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    
+    .controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .search {
+      background: var(--card);
+      border: 1px solid var(--glass-border);
+      padding: 8px 12px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .search input {
+      background: transparent;
+      border: 0;
+      color: inherit;
+      outline: none;
+      width: 220px;
+    }
+    
+    .btn {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+      border: 1px solid var(--glass-border);
+      padding: 8px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      color: inherit;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    
+    .btn:hover {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+    }
+    
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 20px;
+    }
+    
+    nav.sidebar {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid var(--glass-border);
+      height: calc(100vh - 140px);
+      position: sticky;
+      top: 20px;
+      overflow-y: auto;
+    }
+    
+    nav h3 {
+      margin: 0 0 12px 0;
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .cat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .cat {
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+    
+    .cat:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    
+    .cat.active {
+      background: linear-gradient(90deg, rgba(124, 77, 255, 0.12), rgba(0, 212, 255, 0.04));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    }
+    
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--glass);
+      font-size: 12px;
+      border: 1px solid var(--glass-border);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .tag:hover {
+      background: rgba(124, 77, 255, 0.1);
+    }
+    
+    /* main grid */
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .hero {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    
+    .hero .featured {
+      flex: 1;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .featured .thumb {
+      width: 200px;
+      height: 120px;
+      border-radius: 10px;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .featured .thumb::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 77, 255, 0.2));
+      z-index: 1;
+    }
+    
+    .featured .thumb span {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .featured .meta {
+      flex: 1;
+    }
+    
+    .featured .meta h3 {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    
+    /* Category sections with horizontal scrolling */
+    .category-section {
+      margin-bottom: 30px;
+    }
+    
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .category-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .category-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding: 10px 5px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(124, 77, 255, 0.3) transparent;
+    }
+    
+    .category-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    .category-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .category-scroll::-webkit-scrollbar-thumb {
+      background-color: rgba(124, 77, 255, 0.3);
+      border-radius: 3px;
+    }
+    
+    .card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      border-radius: 12px;
+      padding: 0;
+      border: 1px solid var(--glass-border);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.14s ease, box-shadow 0.14s ease;
+      flex: 0 0 220px;
+    }
+    
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+    
+    .thumb {
+      height: 130px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    
+    .card .info {
+      padding: 10px;
+    }
+    
+    .card .title {
+      font-size: 14px;
+      margin: 0;
+    }
+    
+    .card .meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .badge {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    
+    .badge.live {
+      background: rgba(255, 77, 77, 0.15);
+      color: #ff6b6b;
+    }
+    
+    .badge.offline {
+      background: rgba(155, 155, 155, 0.15);
+      color: #9aa4b2;
+    }
+    
+    /* modal player */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(2, 6, 23, 0.6), rgba(2, 6, 23, 0.9));
+      z-index: 60;
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal.open {
+      display: flex;
+    }
+    
+    .player {
+      width: min(1100px, 95%);
+      background: var(--card);
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+    
+    .player .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .player iframe {
+      width: 100%;
+      height: 560px;
+      border: 0;
+      border-radius: 8px;
+    }
+    
+    /* responsive */
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        position: static;
+        height: auto;
+      }
+      
+      .player iframe {
+        height: 320px;
+      }
+      
+      .hero {
+        flex-direction: column;
+      }
+      
+      .featured .thumb {
+        width: 100%;
+        height: 160px;
+      }
+      
+      .card {
+        flex: 0 0 180px;
+      }
+    }
+    
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      
+      .controls {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .search {
+        flex: 1;
+      }
+      
+      .card {
+        flex: 0 0 160px;
+      }
+    }
+    
+    footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      padding: 20px 0;
+      border-top: 1px solid var(--glass-border);
+    }
+    
+    /* small helpers */
+    .muted {
+      color: var(--muted);
+    }
+    
+    .viewers {
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .live-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff6b6b;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 5px rgba(255, 107, 107, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+      }
+    }
+    
+    .category-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      margin-right: 4px;
+    }
+    
+    .sports { background: rgba(0, 212, 255, 0.15); color: #00d4ff; }
+    .news { background: rgba(255, 167, 38, 0.15); color: #ffa726; }
+    .tech { background: rgba(124, 77, 255, 0.15); color: #7c4dff; }
+    .gaming { background: rgba(255, 107, 107, 0.15); color: #ff6b6b; }
+    .music { background: rgba(0, 255, 161, 0.15); color: #00ffa1; }
+    .lifestyle { background: rgba(255, 193, 7, 0.15); color: #ffc107; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="branding">
+        <div class="logo">NS</div>
+        <div class="title">
+          <h1>NeonStream</h1>
+          <p>Futuristic live streaming hub — sports, news, gaming, music, tech & more</p>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 21l-4.35-4.35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <circle cx="11" cy="11" r="6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></circle>
+          </svg>
+          <input id="searchInput" placeholder="Search channels, e.g. 'Sports 24'" />
+        </div>
+        <button class="btn" id="toggleGrid">Optimize</button>
+        <button class="btn" id="openFilters">Filters</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav class="sidebar" aria-label="Categories">
+        <h3>Categories</h3>
+        <div class="cat-list" id="categoryList"></div>
+        <div style="margin-top:14px">
+          <h3>Quick tags</h3>
+          <div class="tags" id="tagList"></div>
+        </div>
+        <div style="margin-top:20px">
+          <h3>Actions</h3>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="tag" id="shuffleBtn">Shuffle</button>
+            <button class="tag" id="liveOnlyBtn">Live only</button>
+            <button class="tag" id="resetBtn">Reset</button>
+          </div>
+        </div>
+      </nav>
+
+      <main class="main">
+        <section class="hero">
+          <div class="featured" id="featured">
+            <div class="thumb" id="featuredThumb" style="background-image: url('https://images.unsplash.com/photo-1517927033932-b3b2bd32a9a5?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=0c6a3a6f3b1b9f2b')">
+              <span>FEATURED</span>
+            </div>
+            <div class="meta">
+              <h3 id="featuredTitle">Prime Sports — Live</h3>
+              <p class="muted" id="featuredDesc">24/7 live sports commentary and highlights</p>
+              <div style="margin-top:12px;display:flex;gap:8px">
+                <button class="btn" id="watchFeatured">Watch</button>
+                <span class="badge live">LIVE</span>
+                <div class="viewers">
+                  <span class="live-indicator"></span>
+                  <span>24.5K viewers</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="channels-container">
+          <!-- Category sections will be dynamically inserted here -->
+        </section>
+
+        <footer>
+          NeonStream — Professional Live Streaming Platform · Replace placeholder streams with your real HLS/DASH/Embed URLs for production.
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <!-- modal player -->
+  <div class="modal" id="modal">
+    <div class="player" role="dialog" aria-label="Live player">
+      <div class="toolbar">
+        <div id="playerTitle">Channel Title</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn" id="popoutBtn">Popout</button>
+          <button class="btn" id="closeModal">Close</button>
+        </div>
+      </div>
+      <iframe id="playerIframe" src="" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+    </div>
+  </div>
+
+  <script>
+    // Channel data (placeholder streams). Replace streamUrl with your HLS/DASH or embed URL.
+    const channels = [
+      // Sports (10 channels)
+      {id:1,name:'Prime Sports 1',category:'Sports',desc:'Live football, highlights, commentary',thumb:'https://images.unsplash.com/photo-1517927033932-b3b2bd32a9a5?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=0c6a3a6f3b1b9f2b',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'24.5K'},
+      {id:2,name:'Prime Sports 2',category:'Sports',desc:'Basketball & analysis',thumb:'https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=a5f9d4f3e6a1b2c3',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'18.2K'},
+      {id:3,name:'Extreme Motors',category:'Sports',desc:'Racing & motorsport',thumb:'https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=8f8a4e9ab4b7e1ea',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'12.7K'},
+      {id:4,name:'CourtVision',category:'Sports',desc:'Tournaments & live coverage',thumb:'https://images.unsplash.com/photo-1518599807930-6b2f2f3b1e6a?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=9d7f8a2d1c6b4e1f',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'15.8K'},
+      {id:5,name:'Arena Sports',category:'Sports',desc:'Multi-sport coverage',thumb:'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=abc123',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'21.3K'},
+      {id:6,name:'Olympic Channel',category:'Sports',desc:'Olympic sports & events',thumb:'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=def456',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'9.7K'},
+      {id:7,name:'Fight Network',category:'Sports',desc:'Combat sports & MMA',thumb:'https://images.unsplash.com/photo-1549060279-7e168fce7090?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ghi789',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'8.4K'},
+      {id:8,name:'Golf Pro',category:'Sports',desc:'Golf tournaments & tips',thumb:'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=jkl012',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'7.1K'},
+      {id:9,name:'Tennis Channel',category:'Sports',desc:'Live tennis matches',thumb:'https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=mno345',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'11.5K'},
+      {id:10,name:'Water Sports',category:'Sports',desc:'Surfing, sailing & more',thumb:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=pqr678',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'5.3K'},
+      
+      // News (7 channels)
+      {id:11,name:'Global News 24',category:'News',desc:'Breaking news & live analysis',thumb:'https://images.unsplash.com/photo-1529245019870-59c3d6f0b6f9?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=abc',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'32.8K'},
+      {id:12,name:'City Live',category:'News',desc:'Local reports & traffic',thumb:'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=def',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'8.9K'},
+      {id:13,name:'Finance Now',category:'News',desc:'Markets & economy live',thumb:'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ghi',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'15.6K'},
+      {id:14,name:'Weather Channel',category:'News',desc:'Global weather updates',thumb:'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=jkl',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'12.4K'},
+      {id:15,name:'Politics Live',category:'News',desc:'Political debates & coverage',thumb:'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=mno',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'18.7K'},
+      {id:16,name:'Tech News Daily',category:'News',desc:'Technology news & reviews',thumb:'https://images.unsplash.com/photo-1518709268805-4e9042af2176?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=pqr',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'9.2K'},
+      {id:17,name:'Health Watch',category:'News',desc:'Medical news & wellness',thumb:'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=stu',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'7.8K'},
+      
+      // Tech (7 channels)
+      {id:18,name:'FutureTech Live',category:'Tech',desc:'Product launches & demos',thumb:'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=jkl',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'22.1K'},
+      {id:19,name:'AI Stream',category:'Tech',desc:'AI talks & coding streams',thumb:'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=mno',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'14.3K'},
+      {id:20,name:'CyberLab',category:'Tech',desc:'Security research & demos',thumb:'https://images.unsplash.com/photo-1555949963-aa79dcee981f?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=pqr',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'16.9K'},
+      {id:21,name:'Gadget Review',category:'Tech',desc:'Latest tech unboxings',thumb:'https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=stu',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'11.7K'},
+      {id:22,name:'Code Live',category:'Tech',desc:'Programming tutorials',thumb:'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=vwx',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'8.5K'},
+      {id:23,name:'Startup Pitch',category:'Tech',desc:'Startup presentations',thumb:'https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=yz',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'9.8K'},
+      {id:24,name:'Robotics Lab',category:'Tech',desc:'Robotics & automation',thumb:'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=aaa',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'6.4K'},
+      
+      // Gaming (7 channels)
+      {id:25,name:'Pro Gamers',category:'Gaming',desc:'Tournaments & speedruns',thumb:'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=stu',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'45.2K'},
+      {id:26,name:'Indie Play',category:'Gaming',desc:'Indie dev streams & playtests',thumb:'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=vwx',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'12.8K'},
+      {id:27,name:'RetroCast',category:'Gaming',desc:'Retro games & nostalgia',thumb:'https://images.unsplash.com/photo-1511512458047-dfb3b670fbe6?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=yz',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'9.3K'},
+      {id:28,name:'Esports Arena',category:'Gaming',desc:'Competitive gaming',thumb:'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=bbb',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'38.7K'},
+      {id:29,name:'Strategy Guide',category:'Gaming',desc:'Game guides & walkthroughs',thumb:'https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ccc',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'15.4K'},
+      {id:30,name:'VR Experience',category:'Gaming',desc:'Virtual reality gaming',thumb:'https://images.unsplash.com/photo-1592478411213-6153e4ebc696?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ddd',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'7.9K'},
+      {id:31,name:'Mobile Gaming',category:'Gaming',desc:'Mobile game streams',thumb:'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=eee',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'11.2K'},
+      
+      // Music (7 channels)
+      {id:32,name:'Chill Vibes',category:'Music',desc:'24/7 lo-fi & chillhop',thumb:'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=aaa',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'28.5K'},
+      {id:33,name:'EDM Stage',category:'Music',desc:'Live DJ sets & festivals',thumb:'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=bbb',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'32.1K'},
+      {id:34,name:'Classical Hall',category:'Music',desc:'Concerts & recitals',thumb:'https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ccc',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'8.7K'},
+      {id:35,name:'Rock Nation',category:'Music',desc:'Rock concerts & interviews',thumb:'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ddd',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'19.3K'},
+      {id:36,name:'Hip Hop Central',category:'Music',desc:'Rap battles & new releases',thumb:'https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=eee',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'14.6K'},
+      {id:37,name:'Jazz Lounge',category:'Music',desc:'Smooth jazz & live sessions',thumb:'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=fff',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'11.8K'},
+      {id:38,name:'World Music',category:'Music',desc:'Global sounds & festivals',thumb:'https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ggg',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'9.4K'},
+      
+      // Lifestyle (7 channels)
+      {id:39,name:'Travel Live',category:'Lifestyle',desc:'Travel cams & vlogs',thumb:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ddd',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'15.7K'},
+      {id:40,name:'Cooking 24',category:'Lifestyle',desc:'Live cooking shows',thumb:'https://images.unsplash.com/photo-1512058564366-c9e3f8a5ff6b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=eee',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'10.2K'},
+      {id:41,name:'DIY Workshop',category:'Lifestyle',desc:'Maker streams & projects',thumb:'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=fff',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'8.9K'},
+      {id:42,name:'Fitness Pro',category:'Lifestyle',desc:'Workout sessions & tips',thumb:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ggg',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'12.5K'},
+      {id:43,name:'Art Studio',category:'Lifestyle',desc:'Live art creation',thumb:'https://images.unsplash.com/photo-1541961017774-22349e4a1262?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=hhh',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'7.3K'},
+      {id:44,name:'Fashion Live',category:'Lifestyle',desc:'Fashion shows & trends',thumb:'https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=iii',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'9.6K'},
+      {id:45,name:'Home & Garden',category:'Lifestyle',desc:'Home improvement & decor',thumb:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=jjj',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'6.8K'}
+    ];
+
+    const state = {
+      filter: 'All',
+      query: '',
+      liveOnly: false,
+      gridView: 'normal'
+    };
+
+    const categories = ['All', 'Sports', 'News', 'Tech', 'Gaming', 'Music', 'Lifestyle'];
+
+    function init() {
+      renderCategories();
+      renderTags();
+      renderCategorySections();
+      attachUI();
+      pickFeatured();
+    }
+
+    function renderCategories() {
+      const el = document.getElementById('categoryList');
+      el.innerHTML = categories.map(c => `
+        <div class="cat ${c === 'All' ? 'active' : ''}" data-cat="${c}">
+          <span>${c}</span>
+          <span class="muted">${channels.filter(ch => ch.category === c).length}</span>
+        </div>
+      `).join('');
+      
+      el.querySelectorAll('.cat').forEach(node => node.addEventListener('click', () => {
+        el.querySelectorAll('.cat').forEach(n => n.classList.remove('active'));
+        node.classList.add('active');
+        state.filter = node.dataset.cat;
+        applyFilters();
+      }));
+    }
+
+    function renderTags() {
+      const tags = ['LIVE', 'Highlights', 'Interviews', '24/7', 'Music', 'AI', 'Racing', 'Gaming', 'News', 'Sports'];
+      const el = document.getElementById('tagList');
+      el.innerHTML = tags.map(t => `<div class="tag" data-tag="${t}">${t}</div>`).join('');
+      
+      el.querySelectorAll('.tag').forEach(t => t.addEventListener('click', () => {
+        // quick-filter by tag (simple demo: filter by text match)
+        state.query = t.textContent;
+        document.getElementById('searchInput').value = state.query;
+        applyFilters();
+      }));
+    }
+
+    function renderCategorySections() {
+      const container = document.getElementById('channels-container');
+      container.innerHTML = '';
+      
+      // Show all categories except "All"
+      const displayCategories = categories.filter(c => c !== 'All');
+      
+      displayCategories.forEach(category => {
+        const categoryChannels = channels.filter(ch => ch.category === category);
+        
+        if (categoryChannels.length > 0) {
+          const section = document.createElement('div');
+          section.className = 'category-section';
+          section.innerHTML = `
+            <div class="category-header">
+              <h2 class="category-title">${category}</h2>
+              <span class="muted">${categoryChannels.length} channels</span>
+            </div>
+            <div class="category-scroll" id="scroll-${category.toLowerCase()}">
+              ${categoryChannels.map(ch => `
+                <div class="card" data-id="${ch.id}" tabindex="0">
+                  <div class="thumb" style="background-image:url(${ch.thumb})"></div>
+                  <div class="info">
+                    <p class="title">${ch.name}</p>
+                    <div class="meta">
+                      <span class="category-badge ${ch.category.toLowerCase()}">${ch.category}</span>
+                      ${ch.live ? '<span class="badge live">LIVE</span>' : '<span class="badge offline">OFF AIR</span>'}
+                    </div>
+                    <p class="muted" style="margin-top:8px;font-size:13px">${ch.desc}</p>
+                    ${ch.viewers ? `<div class="viewers" style="margin-top:6px"><span class="live-indicator"></span><span>${ch.viewers} viewers</span></div>` : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+          
+          container.appendChild(section);
+          
+          // Add click events to the cards
+          section.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => openPlayer(card.dataset.id));
+          });
+        }
+      });
+    }
+
+    function applyFilters() {
+      let filteredChannels = channels.slice();
+      
+      if (state.filter && state.filter !== 'All') {
+        filteredChannels = filteredChannels.filter(c => c.category === state.filter);
+      }
+      
+      if (state.liveOnly) {
+        filteredChannels = filteredChannels.filter(c => c.live);
+      }
+      
+      if (state.query && state.query.trim() !== '') {
+        const q = state.query.toLowerCase();
+        filteredChannels = filteredChannels.filter(c => 
+          c.name.toLowerCase().includes(q) || 
+          c.desc.toLowerCase().includes(q) || 
+          c.category.toLowerCase().includes(q)
+        );
+      }
+      
+      // Update the display based on filters
+      if (state.filter === 'All' && !state.liveOnly && !state.query) {
+        // Show all categories normally
+        renderCategorySections();
+      } else {
+        // Show filtered results in a single section
+        const container = document.getElementById('channels-container');
+        container.innerHTML = `
+          <div class="category-section">
+            <div class="category-header">
+              <h2 class="category-title">Filtered Results</h2>
+              <span class="muted">${filteredChannels.length} channels</span>
+            </div>
+            <div class="category-scroll">
+              ${filteredChannels.map(ch => `
+                <div class="card" data-id="${ch.id}" tabindex="0">
+                  <div class="thumb" style="background-image:url(${ch.thumb})"></div>
+                  <div class="info">
+                    <p class="title">${ch.name}</p>
+                    <div class="meta">
+                      <span class="category-badge ${ch.category.toLowerCase()}">${ch.category}</span>
+                      ${ch.live ? '<span class="badge live">LIVE</span>' : '<span class="badge offline">OFF AIR</span>'}
+                    </div>
+                    <p class="muted" style="margin-top:8px;font-size:13px">${ch.desc}</p>
+                    ${ch.viewers ? `<div class="viewers" style="margin-top:6px"><span class="live-indicator"></span><span>${ch.viewers} viewers</span></div>` : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        
+        // Add click events to the filtered cards
+        container.querySelectorAll('.card').forEach(card => {
+          card.addEventListener('click', () => openPlayer(card.dataset.id));
+        });
+      }
+    }
+
+    function attachUI() {
+      document.getElementById('searchInput').addEventListener('input', e => {
+        state.query = e.target.value;
+        applyFilters();
+      });
+      
+      document.getElementById('shuffleBtn').addEventListener('click', () => {
+        shuffle();
+      });
+      
+      document.getElementById('liveOnlyBtn').addEventListener('click', () => {
+        state.liveOnly = !state.liveOnly;
+        applyFilters();
+      });
+      
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        state.filter = 'All';
+        state.query = '';
+        state.liveOnly = false;
+        document.getElementById('searchInput').value = '';
+        document.querySelectorAll('.cat').forEach(n => n.classList.remove('active'));
+        document.querySelector('.cat[data-cat="All"]').classList.add('active');
+        renderCategorySections();
+      });
+      
+      document.getElementById('toggleGrid').addEventListener('click', () => {
+        state.gridView = state.gridView === 'normal' ? 'compact' : 'normal';
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+          card.style.flex = state.gridView === 'compact' ? '0 0 180px' : '0 0 220px';
+        });
+      });
+      
+      document.getElementById('watchFeatured').addEventListener('click', () => openPlayer(currentFeatured.id));
+      document.getElementById('closeModal').addEventListener('click', closeModal);
+      document.getElementById('modal').addEventListener('click', (e) => {
+        if (e.target.id === 'modal') closeModal();
+      });
+      document.getElementById('popoutBtn').addEventListener('click', popout);
+      
+      // keyboard escape
+      window.addEventListener('keyup', e => {
+        if (e.key === 'Escape') closeModal();
+      });
+    }
+
+    function shuffle() {
+      for (let i = channels.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [channels[i], channels[j]] = [channels[j], channels[i]];
+      }
+      renderCategorySections();
+    }
+
+    let currentFeatured = null;
+    
+    function pickFeatured() {
+      const live = channels.filter(c => c.live);
+      currentFeatured = live.length ? live[0] : channels[0];
+      
+      document.getElementById('featuredThumb').style.backgroundImage = `url(${currentFeatured.thumb})`;
+      document.getElementById('featuredTitle').textContent = currentFeatured.name;
+      document.getElementById('featuredDesc').textContent = currentFeatured.desc;
+    }
+
+    function openPlayer(id) {
+      const ch = channels.find(c => String(c.id) === String(id));
+      if (!ch) return;
+      
+      document.getElementById('playerTitle').textContent = ch.name + (ch.live ? ' · LIVE' : ' · Off-air');
+      // insert stream URL - in production replace with HLS player or secure embed
+      document.getElementById('playerIframe').src = ch.streamUrl;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+      document.getElementById('playerIframe').src = '';
+    }
+
+    function popout() {
+      const src = document.getElementById('playerIframe').src;
+      if (!src) return;
+      window.open(src, '_blank', 'noopener,noreferrer');
+    }
+
+    // init on load
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
