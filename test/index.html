@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DKUT Resource Centre - Sample Page</title>
+<title>DKUT Resource Centre - Live Counter jjjj</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #f2f2f2; padding: 20px; }
-  h1 { margin-bottom: 10px; }
+  body { font-family: Arial, sans-serif; padding: 20px; background: #f2f2f2; }
   #counter { font-weight: bold; color: #0f0; font-size: 18px; margin-bottom: 20px; }
   .school-list { margin-top: 20px; }
   .school { padding: 10px; margin-bottom: 5px; background: #fff; border-radius: 5px; }
@@ -14,9 +13,7 @@
 </head>
 <body>
 
-<h1>Welcome to DKUT Resource Centre</h1>
-
-<!-- Live user counter -->
+<h1>DKUT Resource Centre</h1>
 <div id="counter">👥 Active Users on this page: <span id="online-count">0</span></div>
 
 <div class="school-list">
@@ -25,41 +22,80 @@
 </div>
 
 <script type="module">
-  // --- Firebase SDK ---
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getDatabase, ref, onDisconnect, onValue, push, set, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+  import { getFirestore, collection, doc, setDoc, deleteDoc, serverTimestamp, onSnapshot, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   // --- Firebase config ---
   const firebaseConfig = {
-    apiKey: "AIzaSyB7pfbXBZTPfQYkwJhZx7-p2S9-9flhdE8",
-    authDomain: "dekutconnect-official.firebaseapp.com",
-    databaseURL: "https://dekutconnect-official-default-rtdb.firebaseio.com",
-    projectId: "dekutconnect-official",
-    storageBucket: "dekutconnect-official.firebasestorage.app",
-    messagingSenderId: "934091852918",
-    appId: "1:934091852918:web:d57dc1a9eb6b24c06d2357",
-    measurementId: "G-YKYK3WFCDF"
+    apiKey: "AIzaSyCQyeO6ncD1i5KRinpdnMwLMi6qvEjsUW4",
+    authDomain: "imager-7d993.firebaseapp.com",
+    projectId: "imager-7d993",
+    storageBucket: "imager-7d993.firebasestorage.app",
+    messagingSenderId: "291447920395",
+    appId: "1:291447920395:web:fed65daa2871e0986ab40e",
+    measurementId: "G-RY08F5KZXN"
   };
 
-  // --- Initialize Firebase ---
   const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+  const db = getFirestore(app);
 
   // --- Auto-detect page identity ---
   const pageKey = location.pathname.replace(/\//g, "_") || "home";
-  const connectionsRef = ref(db, `connections${pageKey}`);
 
   // --- Track current user ---
-  const myConnection = push(connectionsRef);
-  set(myConnection, { connectedAt: serverTimestamp() });
-  onDisconnect(myConnection).remove();
+  const userId = crypto.randomUUID(); // unique per visitor
+  const userDocRef = doc(db, "onlineUsers", `${pageKey}_${userId}`);
 
-  // --- Update live counter ---
+  async function joinPage() {
+    await setDoc(userDocRef, { 
+      page: pageKey, 
+      connectedAt: serverTimestamp() 
+    });
+  }
+
+  async function leavePage() {
+    await deleteDoc(userDocRef).catch(()=>{}); // ignore errors
+  }
+
+  // Remove user on tab close / reload
+  window.addEventListener("beforeunload", leavePage);
+
+  // Join the page
+  joinPage();
+
+  // --- Live counter ---
   const counterEl = document.getElementById("online-count");
-  onValue(connectionsRef, snapshot => {
-    const count = snapshot.size || Object.keys(snapshot.val() || {}).length;
+
+  // Listen to changes in the onlineUsers collection for this page
+  const usersCollection = collection(db, "onlineUsers");
+
+  const updateCounter = async () => {
+    const q = query(usersCollection, where("page", "==", pageKey));
+    const snapshot = await getDocs(q);
+    counterEl.textContent = snapshot.size;
+  };
+
+  // Initial update
+  updateCounter();
+
+  // Real-time listener
+  onSnapshot(usersCollection, snapshot => {
+    const count = snapshot.docs.filter(doc => doc.data().page === pageKey).length;
     counterEl.textContent = count;
   });
+
+  // Optional: periodically clean stale users (if they closed tab without firing beforeunload)
+  setInterval(async () => {
+    const now = Date.now();
+    const q = query(usersCollection, where("page", "==", pageKey));
+    const snapshot = await getDocs(q);
+    snapshot.docs.forEach(docSnap => {
+      const connectedAt = docSnap.data().connectedAt?.seconds ? docSnap.data().connectedAt.seconds * 1000 : 0;
+      if (now - connectedAt > 60000) { // 1 min timeout
+        deleteDoc(docSnap.ref).catch(()=>{});
+      }
+    });
+  }, 30000); // every 30s
 </script>
 
 </body>
