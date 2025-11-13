@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeonStream — Futuristic Live Streaming Platform</title>
+  <meta name="description" content="Professional live streaming hub: sports, news, gaming, music, tech and more.">
+  <style>
+    :root {
+      --bg: #05060b;
+      --card: #0b0f16;
+      --glass: rgba(255, 255, 255, 0.04);
+      --accent1: linear-gradient(135deg, #00d4ff 0%, #7c4dff 100%);
+      --accent2: linear-gradient(135deg, #00ffa1 0%, #00d4ff 100%);
+      --accent3: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+      --muted: #9aa4b2;
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --max-width: 1400px;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      height: 100%;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(124, 77, 255, 0.07), transparent 5%), 
+                  radial-gradient(1000px 500px at 90% 90%, rgba(0, 212, 255, 0.03), transparent 5%), 
+                  var(--bg);
+      color: #e6eef8;
+      overflow-x: hidden;
+    }
+    
+    .wrap {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 12px;
+    }
+    
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    
+    .branding {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--accent1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 24px rgba(124, 77, 255, 0.12);
+      font-weight: 700;
+      color: white;
+      font-size: 14px;
+    }
+    
+    .title {
+      line-height: 1;
+      flex: 1;
+    }
+    
+    .title h1 {
+      font-size: 18px;
+      margin: 0;
+      background: var(--accent1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .title p {
+      margin: 0;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    
+    .controls {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      width: 100%;
+    }
+    
+    .search {
+      background: var(--card);
+      border: 1px solid var(--glass-border);
+      padding: 8px 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+    
+    .search input {
+      background: transparent;
+      border: 0;
+      color: inherit;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+    }
+    
+    .btn {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+      border: 1px solid var(--glass-border);
+      padding: 8px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      color: inherit;
+      font-size: 12px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    
+    .btn:hover {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+    }
+    
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    
+    /* Main content area */
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    /* Active player section */
+    .active-player {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .active-player.show {
+      display: flex;
+    }
+    
+    .player-container {
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    }
+    
+    .player-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    
+    .player-info {
+      flex: 1;
+    }
+    
+    .player-info h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+    
+    .player-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    /* Category sections */
+    .category-section {
+      margin-bottom: 24px;
+    }
+    
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .category-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .see-all-btn {
+      background: transparent;
+      border: 1px solid var(--glass-border);
+      color: var(--muted);
+      padding: 4px 8px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s ease;
+    }
+    
+    .see-all-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #e6eef8;
+    }
+    
+    .category-scroll {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 8px 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(124, 77, 255, 0.3) transparent;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .category-scroll::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    .category-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .category-scroll::-webkit-scrollbar-thumb {
+      background-color: rgba(124, 77, 255, 0.3);
+      border-radius: 2px;
+    }
+    
+    .card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+      border-radius: 10px;
+      padding: 0;
+      border: 1px solid var(--glass-border);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.14s ease, box-shadow 0.14s ease;
+      flex: 0 0 160px;
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    }
+    
+    .thumb {
+      height: 100px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    
+    .card .info {
+      padding: 8px;
+    }
+    
+    .card .title {
+      font-size: 13px;
+      margin: 0;
+      line-height: 1.3;
+    }
+    
+    .card .meta {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .badge {
+      padding: 3px 6px;
+      border-radius: 999px;
+      font-size: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    
+    .badge.live {
+      background: rgba(255, 77, 77, 0.15);
+      color: #ff6b6b;
+    }
+    
+    .badge.offline {
+      background: rgba(155, 155, 155, 0.15);
+      color: #9aa4b2;
+    }
+    
+    /* small helpers */
+    .muted {
+      color: var(--muted);
+    }
+    
+    .viewers {
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .live-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ff6b6b;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 3px rgba(255, 107, 107, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+      }
+    }
+    
+    .category-badge {
+      display: inline-block;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 9px;
+      margin-right: 4px;
+    }
+    
+    .sports { background: rgba(0, 212, 255, 0.15); color: #00d4ff; }
+    .news { background: rgba(255, 167, 38, 0.15); color: #ffa726; }
+    .tech { background: rgba(124, 77, 255, 0.15); color: #7c4dff; }
+    .gaming { background: rgba(255, 107, 107, 0.15); color: #ff6b6b; }
+    .music { background: rgba(0, 255, 161, 0.15); color: #00ffa1; }
+    .lifestyle { background: rgba(255, 193, 7, 0.15); color: #ffc107; }
+    .cartoon { background: rgba(156, 39, 176, 0.15); color: #9c27b0; }
+    
+    footer {
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+      padding: 16px 0;
+      border-top: 1px solid var(--glass-border);
+    }
+    
+    /* Tablet and larger screens */
+    @media (min-width: 768px) {
+      .wrap {
+        padding: 16px;
+      }
+      
+      header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+      
+      .branding {
+        justify-content: flex-start;
+      }
+      
+      .controls {
+        width: auto;
+        justify-content: flex-end;
+      }
+      
+      .search {
+        width: 200px;
+      }
+      
+      .active-player {
+        flex-direction: row;
+      }
+      
+      .player-container {
+        width: 60%;
+        padding-top: 33.75%; /* 16:9 Aspect Ratio for 60% width */
+      }
+      
+      .card {
+        flex: 0 0 200px;
+      }
+      
+      .thumb {
+        height: 120px;
+      }
+    }
+    
+    /* Desktop screens */
+    @media (min-width: 1024px) {
+      .card {
+        flex: 0 0 220px;
+      }
+      
+      .all-channels-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="branding">
+        <div class="logo">NS</div>
+        <div class="title">
+          <h1>NeonStream</h1>
+          <p>Futuristic live streaming hub</p>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 21l-4.35-4.35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <circle cx="11" cy="11" r="6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></circle>
+          </svg>
+          <input id="searchInput" placeholder="Search channels" />
+        </div>
+        <button class="btn" id="liveOnlyBtn">Live only</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <main class="main">
+        <!-- Active Player Section (shown when a channel is selected) -->
+        <section class="active-player" id="activePlayer">
+          <div class="player-container">
+            <iframe id="playerIframe" src="" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+          </div>
+          <div class="player-info">
+            <h3 id="playerTitle">Select a channel to start streaming</h3>
+            <p class="muted" id="playerDesc">Choose from the categories below</p>
+            <div class="player-actions">
+              <span class="badge live">LIVE</span>
+              <div class="viewers">
+                <span class="live-indicator"></span>
+                <span id="playerViewers">0 viewers</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Related Channels Section (shown when a channel is selected) -->
+        <section class="category-section" id="relatedChannels" style="display: none;">
+          <div class="category-header">
+            <h2 class="category-title" id="relatedTitle">More from this category</h2>
+          </div>
+          <div class="category-scroll" id="relatedScroll">
+            <!-- Related channels will be dynamically inserted here -->
+          </div>
+        </section>
+
+        <!-- All Categories Section -->
+        <section id="channels-container">
+          <!-- Category sections will be dynamically inserted here -->
+        </section>
+
+        <footer>
+          NeonStream — Professional Live Streaming Platform
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Channel data with your provided streams
+    const channels = [
+      // Sports channels - these will navigate directly to the URL
+      {id:1,name:'Premier League',category:'Sports',desc:'Live Premier League matches',thumb:'https://images.unsplash.com/photo-1517927033932-b3b2bd32a9a5?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=0c6a3a6f3b1b9f2b',live:true,streamUrl:'https://axtra.eduniapps.com/premierleague',viewers:'24.5K', navigate: true},
+      {id:2,name:'Football',category:'Sports',desc:'Live football matches',thumb:'https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=a5f9d4f3e6a1b2c3',live:true,streamUrl:'https://axtra.eduniapps.com/football',viewers:'18.2K', navigate: true},
+      {id:3,name:'F1 Racing',category:'Sports',desc:'Formula 1 racing',thumb:'https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=8f8a4e9ab4b7e1ea',live:false,streamUrl:'https://axtra.eduniapps.com/F1',viewers:'12.7K', navigate: true},
+      
+      // Cartoon channels - these will be embedded
+      {id:4,name:'Disney Channel Animation',category:'Cartoon',desc:'Disney animated shows',thumb:'https://images.unsplash.com/photo-1598890777032-bde8354c4084?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=abc',live:true,streamUrl:'https://www.youtube.com/embed/8z_xyfgl3mM',viewers:'15.8K', navigate: false},
+      {id:5,name:'Miraculous Ladybug',category:'Cartoon',desc:'Miraculous Ladybug episodes',thumb:'https://images.unsplash.com/photo-1598890777032-bde8354c4084?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=def',live:false,streamUrl:'https://www.youtube.com/embed/mdwFQNvAj60',viewers:'21.3K', navigate: false},
+      {id:6,name:'Emma And Joey',category:'Cartoon',desc:'Emma And Joey animated series',thumb:'https://images.unsplash.com/photo-1598890777032-bde8354c4084?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ghi',live:true,streamUrl:'https://www.youtube.com/embed/-VBxijFm50Y',viewers:'9.7K', navigate: false},
+      {id:7,name:'Marvel HQ',category:'Cartoon',desc:'Marvel animated series',thumb:'https://images.unsplash.com/photo-1598890777032-bde8354c4084?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=jkl',live:false,streamUrl:'https://www.youtube.com/embed/2PzfL3zrE-o',viewers:'8.4K', navigate: false},
+      {id:8,name:'SpongeBob SquarePants',category:'Cartoon',desc:'SpongeBob SquarePants episodes',thumb:'https://images.unsplash.com/photo-1598890777032-bde8354c4084?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=mno',live:true,streamUrl:'https://www.youtube.com/embed/kzcUBov6QBI',viewers:'7.1K', navigate: false},
+      {id:9,name:'Disney Jr.',category:'Cartoon',desc:'Disney Junior shows',thumb:'https://images.unsplash.com/photo-1598890777032-bde8354c4084?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=pqr',live:true,streamUrl:'https://www.youtube.com/embed/FPAVYRiJb84',viewers:'11.5K', navigate: false},
+      {id:10,name:'Total Drama',category:'Cartoon',desc:'Total Drama animated series',thumb:'https://images.unsplash.com/photo-1598890777032-bde8354c4084?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=stu',live:false,streamUrl:'https://www.youtube.com/embed/Q0zx1vpTghg',viewers:'5.3K', navigate: false},
+      
+      // News channels - these will be embedded
+      {id:11,name:'FRANCE 24 English',category:'News',desc:'International news coverage',thumb:'https://images.unsplash.com/photo-1529245019870-59c3d6f0b6f9?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=abc',live:true,streamUrl:'https://www.youtube.com/embed/Ap-UM1O9RBU',viewers:'32.8K', navigate: false},
+      {id:12,name:'NBC News',category:'News',desc:'Breaking news & analysis',thumb:'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=def',live:false,streamUrl:'https://www.youtube.com/embed/wZuRLBIL9MI',viewers:'8.9K', navigate: false},
+      {id:13,name:'DW News',category:'News',desc:'German international news',thumb:'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ghi',live:true,streamUrl:'https://www.youtube.com/embed/LuKwFajn37U',viewers:'15.6K', navigate: false},
+      {id:14,name:'ABC News',category:'News',desc:'American news network',thumb:'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=jkl',live:true,streamUrl:'https://www.youtube.com/embed/iipR5yUp36o',viewers:'12.4K', navigate: false},
+      {id:15,name:'Citizen TV Kenya',category:'News',desc:'Kenyan news channel',thumb:'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=mno',live:true,streamUrl:'https://www.youtube.com/embed/PGIalZd9WPs',viewers:'18.7K', navigate: false},
+      {id:16,name:'NTV Kenya',category:'News',desc:'Kenyan television network',thumb:'https://images.unsplash.com/photo-1518709268805-4e9042af2176?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=pqr',live:false,streamUrl:'https://www.youtube.com/embed/CJcAxIxIJMo',viewers:'9.2K', navigate: false},
+      {id:17,name:'Bloomberg Television',category:'News',desc:'Financial news network',thumb:'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=stu',live:true,streamUrl:'https://www.youtube.com/embed/iEpJwprxDdk',viewers:'7.8K', navigate: false},
+      
+      // Additional channels for other categories
+      {id:18,name:'FutureTech Live',category:'Tech',desc:'Product launches & demos',thumb:'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=jkl',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'22.1K', navigate: false},
+      {id:19,name:'AI Stream',category:'Tech',desc:'AI talks & coding streams',thumb:'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=mno',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'14.3K', navigate: false},
+      {id:20,name:'CyberLab',category:'Tech',desc:'Security research & demos',thumb:'https://images.unsplash.com/photo-1555949963-aa79dcee981f?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=pqr',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'16.9K', navigate: false},
+      {id:21,name:'Pro Gamers',category:'Gaming',desc:'Tournaments & speedruns',thumb:'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=stu',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'45.2K', navigate: false},
+      {id:22,name:'Indie Play',category:'Gaming',desc:'Indie dev streams & playtests',thumb:'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=vwx',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'12.8K', navigate: false},
+      {id:23,name:'Chill Vibes',category:'Music',desc:'24/7 lo-fi & chillhop',thumb:'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=aaa',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'28.5K', navigate: false},
+      {id:24,name:'EDM Stage',category:'Music',desc:'Live DJ sets & festivals',thumb:'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=bbb',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'32.1K', navigate: false},
+      {id:25,name:'Travel Live',category:'Lifestyle',desc:'Travel cams & vlogs',thumb:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ddd',live:true,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'15.7K', navigate: false},
+      {id:26,name:'Cooking 24',category:'Lifestyle',desc:'Live cooking shows',thumb:'https://images.unsplash.com/photo-1512058564366-c9e3f8a5ff6b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=eee',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'10.2K', navigate: false}
+    ];
+
+    const state = {
+      query: '',
+      liveOnly: false,
+      currentChannel: null
+    };
+
+    const categories = ['Sports', 'Cartoon', 'News', 'Tech', 'Gaming', 'Music', 'Lifestyle'];
+
+    function init() {
+      renderCategorySections();
+      attachUI();
+    }
+
+    function renderCategorySections() {
+      const container = document.getElementById('channels-container');
+      container.innerHTML = '';
+      
+      categories.forEach(category => {
+        const categoryChannels = channels.filter(ch => ch.category === category);
+        
+        if (categoryChannels.length > 0) {
+          const section = document.createElement('div');
+          section.className = 'category-section';
+          section.innerHTML = `
+            <div class="category-header">
+              <h2 class="category-title">${category}</h2>
+              <div>
+                <span class="muted">${categoryChannels.length} channels</span>
+                <button class="see-all-btn" data-category="${category}">See All</button>
+              </div>
+            </div>
+            <div class="category-scroll" id="scroll-${category.toLowerCase()}">
+              ${categoryChannels.map(ch => `
+                <div class="card" data-id="${ch.id}" tabindex="0">
+                  <div class="thumb" style="background-image:url(${ch.thumb})"></div>
+                  <div class="info">
+                    <p class="title">${ch.name}</p>
+                    <div class="meta">
+                      <span class="category-badge ${ch.category.toLowerCase()}">${ch.category}</span>
+                      ${ch.live ? '<span class="badge live">LIVE</span>' : '<span class="badge offline">OFF AIR</span>'}
+                    </div>
+                    <p class="muted" style="margin-top:4px;font-size:11px">${ch.desc}</p>
+                    ${ch.viewers ? `<div class="viewers" style="margin-top:4px"><span class="live-indicator"></span><span>${ch.viewers} viewers</span></div>` : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+          
+          container.appendChild(section);
+          
+          // Add click events to the cards
+          section.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => openChannel(card.dataset.id));
+          });
+          
+          // Add click event to "See All" button
+          section.querySelector('.see-all-btn').addEventListener('click', (e) => {
+            showAllChannels(e.target.dataset.category);
+          });
+        }
+      });
+    }
+
+    function openChannel(id) {
+      const ch = channels.find(c => String(c.id) === String(id));
+      if (!ch) return;
+      
+      // If it's a sports channel, navigate directly to the URL
+      if (ch.navigate) {
+        window.open(ch.streamUrl, '_blank');
+        return;
+      }
+      
+      // Update state
+      state.currentChannel = ch;
+      
+      // Update active player section
+      document.getElementById('playerTitle').textContent = ch.name;
+      document.getElementById('playerDesc').textContent = ch.desc;
+      document.getElementById('playerViewers').textContent = ch.viewers + ' viewers';
+      
+      // Convert YouTube watch URLs to embed URLs
+      let embedUrl = ch.streamUrl;
+      if (embedUrl.includes('youtube.com/watch?v=')) {
+        const videoId = embedUrl.split('v=')[1];
+        embedUrl = `https://www.youtube.com/embed/${videoId}`;
+      }
+      document.getElementById('playerIframe').src = embedUrl;
+      
+      // Show active player
+      document.getElementById('activePlayer').classList.add('show');
+      
+      // Show related channels
+      showRelatedChannels(ch.category, ch.id);
+      
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showRelatedChannels(category, currentId) {
+      const relatedChannels = channels.filter(ch => 
+        ch.category === category && ch.id !== parseInt(currentId)
+      );
+      
+      if (relatedChannels.length > 0) {
+        document.getElementById('relatedTitle').textContent = `More ${category} Channels`;
+        document.getElementById('relatedScroll').innerHTML = relatedChannels.map(ch => `
+          <div class="card" data-id="${ch.id}" tabindex="0">
+            <div class="thumb" style="background-image:url(${ch.thumb})"></div>
+            <div class="info">
+              <p class="title">${ch.name}</p>
+              <div class="meta">
+                <span class="category-badge ${ch.category.toLowerCase()}">${ch.category}</span>
+                ${ch.live ? '<span class="badge live">LIVE</span>' : '<span class="badge offline">OFF AIR</span>'}
+              </div>
+              <p class="muted" style="margin-top:4px;font-size:11px">${ch.desc}</p>
+              ${ch.viewers ? `<div class="viewers" style="margin-top:4px"><span class="live-indicator"></span><span>${ch.viewers} viewers</span></div>` : ''}
+            </div>
+          </div>
+        `).join('');
+        
+        document.getElementById('relatedChannels').style.display = 'block';
+        
+        // Add click events to related channels
+        document.getElementById('relatedScroll').querySelectorAll('.card').forEach(card => {
+          card.addEventListener('click', () => openChannel(card.dataset.id));
+        });
+      } else {
+        document.getElementById('relatedChannels').style.display = 'none';
+      }
+    }
+
+    function showAllChannels(category) {
+      const categoryChannels = channels.filter(ch => ch.category === category);
+      
+      // Create a modal to show all channels in this category
+      const modal = document.createElement('div');
+      modal.className = 'modal open';
+      modal.innerHTML = `
+        <div class="player">
+          <div class="toolbar">
+            <h2>All ${category} Channels</h2>
+            <button class="btn" id="closeAllModal">Close</button>
+          </div>
+          <div class="all-channels-grid">
+            ${categoryChannels.map(ch => `
+              <div class="card" data-id="${ch.id}" style="flex: 1 1 auto;">
+                <div class="thumb" style="background-image:url(${ch.thumb})"></div>
+                <div class="info">
+                  <p class="title">${ch.name}</p>
+                  <div class="meta">
+                    <span class="category-badge ${ch.category.toLowerCase()}">${ch.category}</span>
+                    ${ch.live ? '<span class="badge live">LIVE</span>' : '<span class="badge offline">OFF AIR</span>'}
+                  </div>
+                  <p class="muted" style="margin-top:4px;font-size:11px">${ch.desc}</p>
+                  ${ch.viewers ? `<div class="viewers" style="margin-top:4px"><span class="live-indicator"></span><span>${ch.viewers} viewers</span></div>` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      // Add click events to the cards in the modal
+      modal.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => {
+          openChannel(card.dataset.id);
+          document.body.removeChild(modal);
+        });
+      });
+      
+      // Add close event
+      modal.querySelector('#closeAllModal').addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+      
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          document.body.removeChild(modal);
+        }
+      });
+    }
+
+    function applyFilters() {
+      let filteredChannels = channels.slice();
+      
+      if (state.liveOnly) {
+        filteredChannels = filteredChannels.filter(c => c.live);
+      }
+      
+      if (state.query && state.query.trim() !== '') {
+        const q = state.query.toLowerCase();
+        filteredChannels = filteredChannels.filter(c => 
+          c.name.toLowerCase().includes(q) || 
+          c.desc.toLowerCase().includes(q) || 
+          c.category.toLowerCase().includes(q)
+        );
+      }
+      
+      // Show filtered results in a single section
+      const container = document.getElementById('channels-container');
+      container.innerHTML = `
+        <div class="category-section">
+          <div class="category-header">
+            <h2 class="category-title">Search Results</h2>
+            <span class="muted">${filteredChannels.length} channels</span>
+          </div>
+          <div class="category-scroll">
+            ${filteredChannels.map(ch => `
+              <div class="card" data-id="${ch.id}" tabindex="0">
+                <div class="thumb" style="background-image:url(${ch.thumb})"></div>
+                <div class="info">
+                  <p class="title">${ch.name}</p>
+                  <div class="meta">
+                    <span class="category-badge ${ch.category.toLowerCase()}">${ch.category}</span>
+                    ${ch.live ? '<span class="badge live">LIVE</span>' : '<span class="badge offline">OFF AIR</span>'}
+                  </div>
+                  <p class="muted" style="margin-top:4px;font-size:11px">${ch.desc}</p>
+                  ${ch.viewers ? `<div class="viewers" style="margin-top:4px"><span class="live-indicator"></span><span>${ch.viewers} viewers</span></div>` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      
+      // Add click events to the filtered cards
+      container.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => openChannel(card.dataset.id));
+      });
+    }
+
+    function attachUI() {
+      document.getElementById('searchInput').addEventListener('input', e => {
+        state.query = e.target.value;
+        if (state.query.trim() === '') {
+          renderCategorySections();
+        } else {
+          applyFilters();
+        }
+      });
+      
+      document.getElementById('liveOnlyBtn').addEventListener('click', () => {
+        state.liveOnly = !state.liveOnly;
+        if (state.liveOnly || state.query) {
+          applyFilters();
+        } else {
+          renderCategorySections();
+        }
+      });
+      
+      // keyboard escape
+      window.addEventListener('keyup', e => {
+        if (e.key === 'Escape') {
+          const modals = document.querySelectorAll('.modal');
+          modals.forEach(modal => {
+            if (modal.parentNode) {
+              modal.parentNode.removeChild(modal);
+            }
+          });
+        }
+      });
+    }
+
+    // init on load
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
