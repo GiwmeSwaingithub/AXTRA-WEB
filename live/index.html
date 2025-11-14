@@ -621,6 +621,12 @@
       }
     }
   </style>
+  <!-- Preload the JS file for faster boot -->
+<link rel="preload" href="https://axtra.eduniapps.com/live/01po.js" as="script">
+
+<!-- Actual script execution -->
+<script src="https://axtra.eduniapps.com/live/01po.js" defer></script>
+
 </head>
 <body>
   <div class="wrap">
@@ -700,5 +706,76 @@
     </div>
   </div>
 <script src="https://axtra.eduniapps.com/live/01po.js"></script>
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize scrolling for all category scroll containers
+    const scrollContainers = document.querySelectorAll('.category-scroll-container');
+    
+    scrollContainers.forEach(container => {
+        const scrollElement = container.querySelector('.category-scroll');
+        const leftBtn = container.querySelector('.scroll-btn.left');
+        const rightBtn = container.querySelector('.scroll-btn.right');
+        
+        // Scroll button functionality
+        if (leftBtn && rightBtn) {
+            leftBtn.addEventListener('click', () => {
+                scrollElement.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+            
+            rightBtn.addEventListener('click', () => {
+                scrollElement.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+        }
+        
+        // Touch/drag scrolling functionality
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        
+        scrollElement.addEventListener('mousedown', (e) => {
+            isDown = true;
+            scrollElement.classList.add('grabbing');
+            startX = e.pageX - scrollElement.offsetLeft;
+            scrollLeft = scrollElement.scrollLeft;
+        });
+        
+        scrollElement.addEventListener('mouseleave', () => {
+            isDown = false;
+            scrollElement.classList.remove('grabbing');
+        });
+        
+        scrollElement.addEventListener('mouseup', () => {
+            isDown = false;
+            scrollElement.classList.remove('grabbing');
+        });
+        
+        scrollElement.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollElement.offsetLeft;
+            const walk = (x - startX) * 2; // Scroll multiplier
+            scrollElement.scrollLeft = scrollLeft - walk;
+        });
+        
+        // Touch events for mobile
+        scrollElement.addEventListener('touchstart', (e) => {
+            isDown = true;
+            startX = e.touches[0].pageX - scrollElement.offsetLeft;
+            scrollLeft = scrollElement.scrollLeft;
+        }, { passive: true });
+        
+        scrollElement.addEventListener('touchend', () => {
+            isDown = false;
+        });
+        
+        scrollElement.addEventListener('touchmove', (e) => {
+            if (!isDown) return;
+            const x = e.touches[0].pageX - scrollElement.offsetLeft;
+            const walk = (x - startX) * 2;
+            scrollElement.scrollLeft = scrollLeft - walk;
+        }, { passive: true });
+    });
+});
+</script>
 </body>
 </html>
