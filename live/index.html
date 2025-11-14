@@ -229,7 +229,7 @@
       background: rgba(255, 255, 255, 0.05);
       color: #e6eef8;
     }
-    .category-scroll-container {
+  .category-scroll-container {
   position: relative;
 }
 
@@ -237,31 +237,25 @@
   display: flex;
   gap: 10px;
 
-  /* Core scrolling */
   overflow-x: auto !important;
   overflow-y: hidden;
   padding: 8px 4px;
 
-  /* Mobile + gesture fixes */
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x pan-y !important;
+  touch-action: pan-x !important; /* <— THIS is the fix */
   overscroll-behavior-x: contain;
 
-  /* Behavior + UX */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
 
   cursor: grab;
   user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
 }
 
 .category-scroll::-webkit-scrollbar {
-  display: none; /* Chrome/Safari/Opera */
+  display: none;
 }
 
 .category-scroll.grabbing {
@@ -269,7 +263,6 @@
   scroll-snap-type: none;
 }
 
-    
     .scroll-btn {
       position: absolute;
       top: 50%;
