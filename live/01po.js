@@ -36,13 +36,13 @@
       {id:26,name:'Cooking 24',category:'Lifestyle',desc:'Live cooking shows',thumb:'https://images.unsplash.com/photo-1512058564366-c9e3f8a5ff6b?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=eee',live:false,streamUrl:'https://www.youtube.com/embed/5qap5aO4i9A',viewers:'10.2K', navigate: false}
     ];
 
-    const state = {
+     const state = {
       query: '',
       liveOnly: false,
       currentChannel: null
     };
 
-    const categories = ['Sports', 'Cartoon', 'News', 'Tech', 'Gaming', 'Music', 'Lifestyle'];
+    const categories = ['Sports',  'News', 'Cartoon','Tech', 'Gaming', 'Music', 'Lifestyle'];
 
     function init() {
       renderCategorySections();
@@ -456,49 +456,3 @@
 
     // init on load
     document.addEventListener('DOMContentLoaded', init);
-document.querySelectorAll('.category-scroll-container').forEach(container => {
-  const scrollArea = container.querySelector('.category-scroll');
-  const btnLeft = container.querySelector('.scroll-btn.left');
-  const btnRight = container.querySelector('.scroll-btn.right');
-
-  // --- Arrow Scrolls ---
-  const scrollDistance = 220; // matches card width + gap
-  btnLeft?.addEventListener('click', () => {
-    scrollArea.scrollBy({ left: -scrollDistance, behavior: 'smooth' });
-  });
-  btnRight?.addEventListener('click', () => {
-    scrollArea.scrollBy({ left: scrollDistance, behavior: 'smooth' });
-  });
-
-  // --- Drag to Scroll ---
-  let isDown = false;
-  let startX;
-  let scrollLeft;
-
-  scrollArea.addEventListener('mousedown', (e) => {
-    isDown = true;
-    scrollArea.classList.add('grabbing');
-    startX = e.pageX - scrollArea.offsetLeft;
-    scrollLeft = scrollArea.scrollLeft;
-  });
-
-  scrollArea.addEventListener('mouseleave', () => {
-    isDown = false;
-    scrollArea.classList.remove('grabbing');
-  });
-
-  scrollArea.addEventListener('mouseup', () => {
-    isDown = false;
-    scrollArea.classList.remove('grabbing');
-  });
-
-  scrollArea.addEventListener('mousemove', (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - scrollArea.offsetLeft;
-    const walk = (x - startX) * 1.3; 
-    scrollArea.scrollLeft = scrollLeft - walk;
-  });
-
-  // Mobile touch is auto handled by -webkit-overflow-scrolling
-});
