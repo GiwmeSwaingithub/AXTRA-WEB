@@ -6,7 +6,7 @@
         const baseUrl = 'https://';
         const junkconfuser = ['streamcrichd', 'com'];
         const streamingDomain = ['eduniapps', 'com'];
-        const pathParts = ['/update/', 'skys5.php'];
+        const pathParts = ['/update/', 'skysn.php'];
         const url = baseUrl + 
                    junkconfuser.join('.') + 
                    pathParts.join('');
