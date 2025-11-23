@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axtra - All-in-One Streaming & Utilities</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #ff6b6b;
+            --dark: #2d3748;
+            --light: #f8f9fa;
+            --warning: #e53e3e;
+            --success: #38a169;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: background 0.3s;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .logo i {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Floating Download Button */
+        .floating-download {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--accent);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.5);
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+            animation: pulse 2s infinite;
+        }
+
+        .floating-download:hover {
+            transform: scale(1.1);
+            background: #ff5252;
+        }
+
+        .floating-download i {
+            font-size: 1.5rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding-top: 80px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 700px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            background: #ff5252;
+        }
+
+        /* Warning Banner */
+        .warning-banner {
+            background: var(--warning);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(229, 62, 62, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0); }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--dark);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 4px solid var(--primary);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        /* Download Section */
+        .download {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .download-steps {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            width: 200px;
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-weight: bold;
+        }
+
+        .app-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .app-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            color: var(--dark);
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .app-button:hover {
+            transform: translateY(-3px);
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .faq-question {
+            background: var(--light);
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .legal {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Download Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+
+        .modal-button.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .modal-button.secondary {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 1rem 0;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .app-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .download-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <i class="fas fa-play-circle"></i>
+                <span>Axtra</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#download">Download</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Floating Download Button -->
+    <div class="floating-download" id="floatingDownload">
+        <i class="fas fa-download"></i>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>All-In-One Entertainment & Utilities</h1>
+                <p>Stream live sports, watch licensed movies, download social media videos, and access powerful utility tools - all in one app</p>
+                <a href="https://axtra.eduniapps.com/app/downloadapp" class="cta-button">
+                    <i class="fas fa-download"></i>
+                    Download Axtra APK
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Warning Banner -->
+    <section class="container">
+        <div class="warning-banner">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>
+                <strong>Android Security Warning:</strong> Since this APK is not from Google Play Store, Android may flag it as potentially harmful. This is a standard security measure for apps installed outside official stores.
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Axtra Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-baseball-ball"></i>
+                    </div>
+                    <h3>Free Live Sports Streaming</h3>
+                    <p>Watch live sports events from around the world with multiple quality options and real-time updates</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <h3>All Movies Free</h3>
+                    <p>Access thousands ofmovies from major studios and independent filmmakers</p>
+                </div>
+                 <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Adult and Celebrity leaks Free</h3>
+                    <p>Access thousands of leaked nud3s,videos and celebrities leaks</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3>Free Music Streaming</h3>
+                    <p>Listen and download to millions of songs and create your own playlists with our music streaming feature</p>
+                </div>
+                 <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <h3>Free Hacking and spy Tools</h3>
+                    <p>Spy and hack others.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>Free Video Downloader</h3>
+                    <p>Download videos from social media platforms for offline viewing (for personal use only)</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Free Utility Tools</h3>
+                    <p>File manager, media player, battery optimizer and other useful Android utilities</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download" id="download">
+        <div class="container">
+            <h2 class="section-title">Download Axtra APK</h2>
+            <p>Follow these steps to install Axtra on your Android device</p>
+            
+            <div class="download-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Download APK</h3>
+                    <p>Get the latest Axtra APK file</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Allow Installation</h3>
+                    <p>Enable "Install from unknown sources" in settings</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Install & Enjoy</h3>
+                    <p>Open the APK file and follow installation steps</p>
+                </div>
+            </div>
+
+            <div class="warning-banner">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>Security Note:</strong> Android will warn about installing from unknown sources. This is normal for APK files. Our app is safe we cant publish on play store since most sports live stream and movies we show we dont have licence and its againt play store policy.
+                </div>
+            </div>
+
+            <div class="app-buttons">
+                <a href="#" class="app-button" id="downloadBtn">
+                    <i class="fas fa-download"></i>
+                    Download Axtra APK (v1.0.2)
+                </a>
+                            <button class="modal-button secondary" id="generateQR">
+                <i class="fas fa-qrcode"></i>
+                Scan QR Code
+            </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Why does Android show a security warning when installing?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Android has built-in security that warns about apps installed outside the Google Play Store. This is a standard protection measure. Axtra APK is completely safe and free from malware.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do I enable installation from unknown sources?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Go to Settings > Security > Enable "Unknown Sources". On newer Android versions, you'll be prompted to allow installation from your browser or file manager when you try to install the APK.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Is the video downloader legal to use?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, for personal use and content that you have rights to download. Always respect copyright laws and platform terms of service when using the downloader feature.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Do I need to create an account?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>No account is required for basic features. Some premium content may require registration for personalized experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-play-circle"></i>
+                <span>Axtra</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">DMCA</a>
+                <a href="#">Contact</a>
+                <a href="#">Support</a>
+            </div>
+            <div class="legal">
+                <p>Axtra respects copyright laws and only provides access to properly licensed content.</p>
+                <p>Video downloader is intended for personal use of content you have rights to download.</p>
+                <p>&copy; 2024 Axtra. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Download Modal -->
+<div class="modal" id="downloadModal">
+    <div class="modal-content">
+        <span class="close-modal" id="closeModal">&times;</span>
+        <h2>Download Axtra APK</h2>
+        <p>Choose your preferred download method:</p>
+
+        <div class="modal-buttons">
+            <a href="downloadapp" class="modal-button primary" id="directDownload" download>
+                <i class="fas fa-download"></i>
+                Direct Download (v1.0.0)
+            </a>
+
+            <button class="modal-button secondary" id="generateQR">
+                <i class="fas fa-qrcode"></i>
+                Scan QR Code
+            </button>
+
+            <button class="modal-button secondary" id="shareLink">
+                <i class="fas fa-share-alt"></i>
+                Share Download Link
+            </button>
+        </div>
+
+        <div id="qrcode" style="margin-top:20px;"></div>
+    </div>
+</div>
+
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Header background on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // FAQ functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                answer.classList.toggle('active');
+                const icon = question.querySelector('i');
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            });
+        });
+
+        // Feature card animation
+        const featureCards = document.querySelectorAll('.feature-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        featureCards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Download modal functionality
+       const downloadModal = document.getElementById('downloadModal');
+const floatingDownload = document.getElementById('floatingDownload');
+const downloadBtn = document.getElementById('downloadBtn');
+const closeModal = document.getElementById('closeModal');
+
+const directDownload = document.getElementById('directDownload');
+const generateQR = document.getElementById('generateQR');
+const shareLink = document.getElementById('shareLink');
+const qrContainer = document.getElementById('qrcode');
+
+// Your real download URL
+const downloadURL = "https://axtra.eduniapps.com/app/downloadapp";
+
+// Open modal
+function openDownloadModal() {
+    downloadModal.style.display = 'flex';
+}
+
+// Close modal
+function closeDownloadModal() {
+    downloadModal.style.display = 'none';
+    qrContainer.innerHTML = ""; // Clear QR on close
+}
+
+// Event listeners
+floatingDownload?.addEventListener('click', openDownloadModal);
+
+downloadBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    openDownloadModal();
+});
+
+closeModal?.addEventListener('click', closeDownloadModal);
+
+// Direct download
+directDownload?.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = downloadURL; // actual download
+    closeDownloadModal();
+});
+
+// QR generator
+generateQR?.addEventListener('click', () => {
+    qrContainer.innerHTML = ""; // reset QR
+    new QRCode(qrContainer, {
+        text: downloadURL,
+        width: 170,
+        height: 170,
+        colorDark: "#000",
+        colorLight: "#fff",
+    });
+});
+
+// Share link
+shareLink?.addEventListener('click', async () => {
+    if (navigator.share) {
+        // native mobile share
+        try {
+            await navigator.share({
+                title: "Axtra App Download",
+                text: "Download the Axtra APK here",
+                url: downloadURL
+            });
+        } catch (err) {
+            console.log("Share cancelled", err);
+        }
+    } else {
+        // fallback: copy to clipboard
+        navigator.clipboard.writeText(downloadURL);
+        alert("Download link copied to clipboard!");
+    }
+});
+
+// Close modal when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === downloadModal) closeDownloadModal();
+});
+
+
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</body>
+</html>
