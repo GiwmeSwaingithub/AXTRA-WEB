@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.techAppProAllInOne.axtra",
+      "sha256_cert_fingerprints": [
+        "13:E1:C2:EC:8C:40:1F:48:27:D1:B3:51:61:00:DF:BD:D7:15:F6:EB:EC:95:65:2A:F0:08:96:3E:0F:BF:08:57"
+      ]
+    }
+  }
+]
