@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <title>
+        TwetLink - Click here to send anonymous messages @dekutconnect
+    </title>
+    <link rel="stylesheet" href="https://twet.link/assets/css/style.css?v=56">
+    <link rel="stylesheet" href="https://twet.link/assets/css/toastify.css">
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
+    <link rel="alternate" href="https://play.google.com/store/apps/details?id=app.srahha.com" hreflang="en">
+    <link rel="alternate" href="https://apps.apple.com/us/app/twetlink-anonymous-messages/id6479186307" hreflang="en">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="theme-color" content="#F7CE68" />
+    <meta name="user:language" content="en">
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://twet.link/assets/images/x-post-en.jpg">
+    <meta property="og:title" content="Click here to send anonymous messages - dekutconnect">
+    <meta property="og:description" content="TwetLink: Send and receive anonymous and secret messages">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://twet.link/assets/images/x-post-en.jpg">
+    <meta name="twitter:title" content="@dekutconnect : Click here to send anonymous messages">
+    <meta name="twitter:description" content="TwetLink: Send and receive anonymous and secret messages">
+    <link rel="canonical" href="https://twet.link/dekutconnect">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://twet.link/assets/js/questions/questions-en.js"></script>
+    <script src="https://twet.link/assets/js/toastify.js"></script>
+    <script src="https://twet.link/assets/js/moment.js"></script>
+    <script src="https://twet.link/assets/js/main.js?v=87" type="module"></script>
+</head>
+
+<body style="background:linear-gradient(0deg, #FBAB7E 18%, #F7CE68 100%);">
+
+    <script>
+        var trans = {
+            "msgShort": "Please enter your message first",
+            "checkInternetConn": "Check your internet connection!",
+            "lastSeen": "Last Seen",
+            "defualt_question": "Send me secret messages anonymously",
+            "error_try_again": "An error occurred, please try again later"
+        }
+        moment.locale("en");
+        var lastSeen = parseInt('1765883335000');
+        var username = "dekutconnect";
+        var qid = ""
+        var profileImg = "https://cdn.twet.link/profile/img/2025/09/07/SBhXu07249.jpg";
+        var appURL = "market://details?id=app.srahha.com";
+        var defaultAnsTime;
+        
+        var now = "Tue Dec 16 2025 14:14:52 GMT+0300 (GMT+03:00)";
+
+        function openInApp() {
+            var start = new Date().getTime();
+            var schemaUrl = "twet://twet.link/" + username;
+            window.location.href = schemaUrl;
+            setTimeout(function() {
+                var now = new Date().getTime();
+                if (now - start < 2500) {
+                    window.location.href = appURL;
+                }
+            }, 2400);
+        }
+    </script>
+
+
+    <div class="header">
+        <div class="logo">
+            <img src="https://twet.link/assets/images/logo_transparent.png">
+            <span>TwetLink</span>
+        </div>
+        <div style="flex: 1;"></div>
+        <div class="end-btns">
+            <button class="outline-btn" onclick="openInApp()">
+                Open In App
+            </button>
+        </div>
+    </div>
+
+    
+
+            <div class="msg-box">
+                <div class="info">
+                    <div class="user-info">
+
+                        <div class="user-right">
+                            
+                                    
+                        </div>
+                    </div>
+                    <div class="user-overlay-info">
+                        <div class="pic" style="background: url(https://cdn.twet.link/profile/img/2025/09/07/SBhXu07249.jpg);">
+                        </div>
+                        <div class="name-sec">
+                            <span class="name">
+                                dekutconnect
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                            
+                                <span class="question">
+                                    Send me secret messages anonymously
+                                </span>
+                                
+                </div>
+                
+                    <div class="textarea-continer">
+                        <textarea id="msgBox" maxlength="800" minlength="3" placeholder="Type message here..." required=""></textarea>
+                        
+                            <div id="cameraBtn" class="over-input-option">
+                                <img src="https://twet.link/assets/images/camera.png">
+                            </div>
+                            
+                                <div id="randomQuestion" class="over-input-option right">
+                                    🎲
+                                </div>
+                    </div>
+                    
+                        <div class="imgs-continer">
+                            <div class="attach-images">
+
+                            </div>
+                        </div>
+                        <input type="file" style="display: none;" id="imageInput" accept="image/*">
+                        
+                            <button id="sendBtn" class="btn" disabled>
+                                <span>
+                                    Send!
+                                </span>
+                                <img src="https://twet.link/assets/images/loading.svg">
+                            </button>
+                            
+            </div>
+
+            <div class="wall" style="display: none;">
+                <span class="title">
+                    Messages
+                </span>
+                <div class="wall-list"></div>
+                <div class="load-more">
+                    <button class="btn load-more">
+                        Load more
+                    </button>
+                </div>
+                <div class="loading" style="display: none;">
+                    <img src="https://twet.link/assets/images/loading.svg?v=3" width="100">
+                </div>
+            </div>
+            <div class="space-120"></div>
+            <div class="msg-sent" style="display: none;">
+                <img src="https://twet.link/assets/images/load-success.webp" loading="lazy">
+                <span>
+                    Sent!
+                </span>
+                <div class="send-another">
+                    <a class="btn" onClick="window.location.reload()">
+                        Send another message
+                    </a>
+                </div>
+            </div>
+
+            <div class="download-ads" style="background: linear-gradient(0deg, #FBAB7E 18%, #FBAB7E 68%, #ffffff00 100%);">
+                <h2 class="download-prompt">👇 <span class="clickCount">346</span>
+                    people clicked right now 👇
+                </h2>
+
+                <a class="btn ads pulse" href="market://details?id=app.srahha.com">
+                    Get your own messages!
+                </a>
+            </div>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"ec4916a582364d77b94ee32d8c5d4686","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+
+</html>
